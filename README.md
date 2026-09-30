@@ -2,7 +2,7 @@
 
 ![ARANT DESIGN logo](brand/identity/print/jpg/arant-horizontal-on-ivory.jpg)
 
-**Objects for considered spaces.** ARANT DESIGN is a contemporary Indian objects and home-design studio. This monorepo
+**Objects for Considered Spaces.** ARANT DESIGN is a contemporary Indian objects and home-design studio. This monorepo
 holds everything the studio designs and builds: the brand identity, its design language, product and packaging
 mockups, the website, and the shared code they depend on.
 
@@ -11,7 +11,7 @@ mockups, the website, and the shared code they depend on.
 | Area            | Path                                              | Status         | What it holds                                                              |
 | --------------- | ------------------------------------------------- | -------------- | -------------------------------------------------------------------------- |
 | Brand identity  | [`brand/identity`](brand/identity/)               | **v1.1 ready** | Logo masters, exports, web icons, print files, brand guide, build scripts  |
-| Design language | [`brand/design-language`](brand/design-language/) | Planned        | Principles, pattern and texture, photography, layout, voice                |
+| Design language | [`brand/design-language`](brand/design-language/) | **v1 draft**   | Principles, colour, type, layout, photography, packaging, digital, voice   |
 | Mockups         | [`brand/mockups`](brand/mockups/)                 | Planned        | Product, packaging and in-situ mockups                                     |
 | Design tokens   | [`packages/tokens`](packages/tokens/)             | **v1.1 ready** | Colour and type as W3C design tokens, shared by everything above and below |
 | Website         | [`apps/website`](apps/website/)                   | Planned        | arantdesign.com                                                            |
@@ -21,13 +21,14 @@ mockups, the website, and the shared code they depend on.
 ```
 arant-design/
 ├── brand/                    design material: artwork, guidelines, mockups (not deployed)
-│   ├── identity/             logo system: logo/, export/, print/, guide/, source/
+│   ├── identity/             logo system and icons: logo/, export/, print/, guide/, icons/, source/
 │   ├── design-language/      how the brand looks and speaks beyond the logo
+│   ├── social/               Instagram posts (posts.json) and rendered templates and posts
 │   └── mockups/              product, packaging and environment mockups
 ├── apps/                     things that are deployed
 │   └── website/              arantdesign.com
 ├── packages/                 code shared between apps and brand tooling
-│   └── tokens/               colour and type tokens (source of truth for palette values)
+│   └── tokens/               design tokens: colour, type, spacing, layout, radius, motion
 ├── package.json              workspace root (private): scripts for building the brand assets
 ├── pnpm-workspace.yaml       workspace packages: apps/* and packages/*
 ├── ruff.toml                 Python formatter and linter settings
@@ -57,11 +58,14 @@ pnpm identity:build   # rebuild all brand identity files from the tokens
 
 | Script                  | Does                                                                                        |
 | ----------------------- | ------------------------------------------------------------------------------------------- |
-| `pnpm identity:check`   | Fail if a brand colour is hard-coded instead of read from the tokens                        |
+| `pnpm identity:check`   | Fail if a brand colour is hard-coded, or a token alias or recorded mix is wrong             |
 | `pnpm identity:logo`    | Rebuild `brand/identity/logo/svg/`                                                          |
 | `pnpm identity:exports` | Rebuild `brand/identity/export/` (one-colour files, PNGs, web and app icons)                |
 | `pnpm identity:print`   | Rebuild `brand/identity/print/` (PDFs and JPGs)                                             |
 | `pnpm identity:guide`   | Rebuild the brand guide and `palette.svg`                                                   |
+| `pnpm identity:icons`   | Rebuild `brand/identity/icons/` (interface icon SVGs, sprite and preview)                   |
+| `pnpm identity:social`  | Render `brand/social/templates/` and `brand/social/posts/` (Instagram frames)               |
+| `pnpm identity:fonts`   | Restore the pinned Jost and Newsreader files used for rendering (needs network access)      |
 | `pnpm identity:build`   | All of the above, in order                                                                  |
 | `pnpm lint:py`          | Check Python formatting and lint rules with Ruff (config in `ruff.toml`)                    |
 | `pnpm format:py`        | Format the Python scripts and apply safe lint fixes                                         |

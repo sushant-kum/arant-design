@@ -5,9 +5,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this repo is
 
 The ARANT DESIGN monorepo (a contemporary Indian home-objects brand). Today it holds the finished **brand identity
-v1.1** (`brand/identity/`) and the shared **design tokens** (`packages/tokens/`). `brand/design-language/`,
-`brand/mockups/` and `apps/website/` are planned; each has only a README describing its intended contents. There is no
-JS/TS/CSS source yet: ESLint, Stylelint and knip are configured ahead of the website.
+v1.1** (`brand/identity/`), the shared **design tokens** (`packages/tokens/`), the **design-language** docs
+(`brand/design-language/`, summarised in `DESIGN.md`) and the Instagram templates and posts (`brand/social/`). `brand/mockups/` and `apps/website/` are planned; each has only
+a README describing its intended contents. There is no JS/TS/CSS source yet: ESLint, Stylelint and knip are configured
+ahead of the website.
+
+## Brand and design work
+
+For any ARANT DESIGN visual, UI, branding, packaging, photography or copy task, consult `DESIGN.md` (the concise design
+contract) and preserve the established brand system. Use the `arant-brand-designer` subagent
+(`.claude/agents/arant-brand-designer.md`) for substantial brand/design work.
 
 ## Commands
 
@@ -16,9 +23,10 @@ Requires Node ≥ 22, pnpm 12 (pinned via `devEngines`), Python 3 (stdlib only),
 
 ```bash
 pnpm install              # also installs the husky git hooks (prepare script)
-pnpm identity:build       # check → logo → exports → print → guide (regenerates all identity files)
-pnpm identity:check       # fail if a brand colour hex is hard-coded in brand/identity/source/*.py
-pnpm identity:logo        # one step at a time: identity:logo | identity:exports | identity:print | identity:guide
+pnpm identity:build       # check → logo → exports → print → guide → icons → social (regenerates everything)
+pnpm identity:check       # fail on a hard-coded brand hex in brand/identity/source/*.py or inconsistent tokens.json
+pnpm identity:logo        # one step at a time: identity:logo | exports | print | guide | icons | social
+pnpm identity:fonts       # re-fetch the vendored Jost/Newsreader files (needs network; not part of identity:build)
 pnpm lint | lint:fix      # ESLint (flat config, eslint.config.mjs)
 pnpm stylelint            # CSS/SCSS
 pnpm format:check | format:fix   # Prettier
@@ -29,21 +37,28 @@ pnpm tool::commit         # commitizen prompt for a Conventional Commit message
 ```
 
 There are no tests. The verification for identity changes is to rebuild and compare outputs: SVG, PNG, ICO, JPG and
-HTML come out byte-for-byte identical when geometry and tokens are unchanged; PDFs differ only in metadata
+HTML (including the icons and social PNGs) come out byte-for-byte identical when geometry and tokens are unchanged; PDFs differ only in metadata
 (`CreationDate`/`ModDate`).
 
 ## Architecture: the identity build pipeline
 
-Everything under `brand/identity/{logo,export,print,guide}/` is **generated**; never hand-edit it (VS Code marks those
-paths read-only, and Prettier/ESLint/Stylelint ignore them). Change the source and rebuild.
+Everything under `brand/identity/{logo,export,print,guide,icons}/` and `brand/social/{templates,posts}/` is
+**generated**; never hand-edit it (VS Code marks those paths read-only, and Prettier/ESLint/Stylelint ignore them).
+Change the source and rebuild.
 
 - **Colour has one source:** `packages/tokens/tokens.json` (W3C Design Tokens, with `{alias}` references and display
   names under `$extensions["com.arantdesign"].name`). `brand/identity/source/brand_tokens.py` loads it and provides
-  `color()`, `name()`, `mix()`, `cmyk()`, `contrast()`. Every build script imports colours from there;
-  `check_tokens.py` (run first by `identity:build` and by lint-staged) fails on any palette hex literal in the scripts.
+  `color()`, `name()`, `mix()`, `cmyk()`, `contrast()`, `role()`, `tokens()`, `recorded_mix()`. Besides the palette,
+  tokens.json holds colour roles (`color.role.*`, dark theme `color.roleDark.*`), spacing, layout, radius, border and
+  motion tokens. Every build script imports colours from there; `check_tokens.py` (run first by `identity:build` and
+  by lint-staged) fails on any palette hex literal in the scripts, on an `{alias}` that doesn't resolve, and on a role
+  stored as a mix (`$extensions["com.arantdesign"].mix`) that no longer matches the current palette.
   Derived shades (guide UI tints, dark theme, mockup materials like kraft/stone) are `tokens.mix(...)` of palette
   colours, never literals. The only allowed literals are black, white and the deliberate off-brand blue in the guide's
   "don't recolour" example.
+- **Two type and colour rules the builds enforce by convention:** uppercase label tracking comes from
+  `letterSpacing.label` (`--tracking-label` in the guide, `TRACK` in the social build), never a literal; Terracotta is
+  never a text colour under 24 px (use Earth or `text.muted`, with a Terracotta rule beside it).
 - **Geometry lives in `build_logo.py`** (with primitives from `glyphs.py`: `Sub`, `poly`, `rect`, `rounded_poly`). It
   writes the 7 masters in `logo/svg/`, all in `logo.default` colour. Everything downstream is derived from these masters.
 - **`build_exports.py`** recolours masters into `export/<version>/arant-<version>-<token>.svg|png` (earth, charcoal,
@@ -56,8 +71,16 @@ paths read-only, and Prettier/ESLint/Stylelint ignore them). Change the source a
   HTML/CSS template (Ruff's E501 is disabled for this file only), and SVG masters are inlined with
   `fill="currentColor"`. The HTML has no `<!doctype>`/`<head>` on purpose: it is also published as a Claude artifact,
   which supplies the skeleton.
+- **`build_icons.py`** draws the interface icon set (24-unit grid, 1.5 stroke, `currentColor`, no brand colour) into
+  `icons/svg/`, `icons/sprite.svg` and `icons/icons-preview.png`.
+- **`build_social.py`** renders Instagram tiles, carousel frames and story/reel covers from `brand/social/posts.json`
+  (hand-edited; photos go in `brand/social/photos/`) into `brand/social/templates/` and `brand/social/posts/`. Frames
+  are self-contained HTML with the fonts embedded, and web tokens are scaled ×3 for a 1080 px frame.
+- **Fonts:** Jost and Newsreader (OFL, with `OFL.txt`) are vendored in `brand/identity/source/fonts/`, so builds work
+  offline. `fetch_fonts.py` restores them from a pinned google/fonts commit, checked by SHA-256.
 - **`render.py`** does all rasterising in one headless-Chrome session (SVG → canvas → data URL). It also handles
-  SVG → PDF via `--print-to-pdf` and writes ICO files by hand. No Python dependencies anywhere.
+  SVG → PDF via `--print-to-pdf`, renders HTML pages to PNG with `screenshot()` (used by the social build) and writes
+  ICO files by hand. No Python dependencies anywhere.
 
 ### Logo invariants (brand decisions; don't change without being asked)
 
@@ -93,4 +116,5 @@ update them when the palette or geometry changes.
   `identity-v1.1`.
 - Spelling: British English (`cspell.json`, which holds the brand word list).
 - Licence: brand assets (everything in `brand/`, plus any copy of them elsewhere) are all rights reserved. Only
-  `brand/identity/source/` and `packages/` are MIT; `apps/` defaults to all rights reserved.
+  `brand/identity/source/` and `packages/` are MIT, except the vendored fonts in `brand/identity/source/fonts/`
+  (SIL OFL 1.1); `apps/` defaults to all rights reserved.
