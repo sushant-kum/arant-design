@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "language": "en,en-GB",
+  "words": [
+    "ARANT",
+    "arantdesign",
+    "Jost",
+    "Newsreader",
+    "terrazzo",
+    "terracotta",
+    "voussoir",
+    "stepwell",
+    "deboss",
+    "debossed",
+    "wordmark",
+    "lockup",
+    "lockups",
+    "Pantone",
+    "webmanifest",
+    "maskable"
+  ],
+  "ignorePaths": [
+    "pnpm-lock.yaml",
+    "**/node_modules/**",
+    ".agents/**",
+    ".claude/**",
+    "brand/identity/export/**",
+    "brand/identity/print/**",
+    "brand/identity/logo/**"
+  ]
+}

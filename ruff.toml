@@ -1,0 +1,27 @@
+# Ruff: Python formatter and linter for the repo (currently brand/identity/source/).
+# Install: `pipx install ruff` (or `uv tool install ruff`). VS Code: the charliermarsh.ruff extension bundles its own.
+line-length = 120
+target-version = "py312"
+include = ["*.py", "*.pyi"]  # Python only: Markdown (including its code blocks) is formatted by Prettier
+extend-exclude = ["node_modules", ".agents", ".claude"]  # third-party Claude Code skills
+
+[lint]
+select = [
+  "E",   # pycodestyle errors
+  "W",   # pycodestyle warnings
+  "F",   # pyflakes: unused names, undefined variables
+  "I",   # isort: import order
+  "B",   # flake8-bugbear: likely bugs
+  "UP",  # pyupgrade: modern syntax for the target version
+  "SIM", # flake8-simplify
+]
+
+[lint.isort]
+known-first-party = ["brand_tokens", "glyphs", "render"]
+
+[format]
+quote-style = "double"
+
+[lint.per-file-ignores]
+# the brand guide is one large HTML/CSS template: wrapping its lines would change the page it generates
+"brand/identity/source/build_guide.py" = ["E501"]

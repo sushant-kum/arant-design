@@ -1,0 +1,8 @@
+{
+  "*.{ts,tsx,mts,cts}": ["eslint --fix", "prettier --write"],
+  "*.{css,scss}": ["stylelint --fix --quiet --allow-empty-input", "prettier --write"],
+  "*.{js,mjs,cjs,html,json,md,yml,yaml}": ["prettier --write"],
+  "*.py": ["ruff format --force-exclude", "ruff check --fix --force-exclude"],
+  "{packages/tokens/tokens.json,brand/identity/source/*.py}": ["pnpm run identity:check"],
+  "*": ["secretlint"]
+}

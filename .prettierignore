@@ -1,0 +1,50 @@
+# Generated brand files: rebuilt by `pnpm identity:build`, so formatting them would only drift from the build
+brand/identity/logo/
+brand/identity/export/
+brand/identity/print/
+brand/identity/guide/
+
+# Compiled output
+dist/
+build/
+out/
+coverage/
+.next/
+.astro/
+.turbo/
+.vercel/
+
+# Node
+node_modules
+.pnpm-store
+pnpm-lock.yaml
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors (shared VS Code settings stay formatted)
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Coding assistants: third-party Claude Code skills
+.agents/
+.claude/
+skills-lock.json
+
+# Python caches (Python itself is formatted by Ruff)
+.venv/
+.ruff_cache/

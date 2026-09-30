@@ -1,0 +1,28 @@
+# Generated brand files
+brand/identity/logo/
+brand/identity/export/
+brand/identity/print/
+brand/identity/guide/
+
+# Compiled output
+dist/
+build/
+out/
+coverage/
+.next/
+.astro/
+.turbo/
+.vercel/
+
+# Node
+node_modules
+.pnpm-store
+
+# IDEs and editors
+.idea/
+.settings/
+.history/
+
+# Coding assistants: third-party Claude Code skills
+.agents/
+.claude/
