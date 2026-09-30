@@ -1,0 +1,104 @@
+{
+  "$description": "Instagram posts rendered by `pnpm identity:social` (brand/identity/source/build_social.py) into brand/social/posts/. Add an entry to make a new post. Layouts: tile (a designed graphic), photo, info and close (logo: stacked, horizontal, one-line or symbol, default stacked; handle: true or false, default true; tagline: true or false, default false); a carousel lists its frames. Photo paths are relative to brand/social/; a missing photo renders as a marked placeholder plate. Entries with \"sample\": true carry a SAMPLE band and are not for posting. Copy and example values come from the design-language docs (social.md, voice-and-copy.md); names and prices are examples.",
+  "posts": [
+    {
+      "slug": "sample-tagline",
+      "sample": true,
+      "format": "feed",
+      "layout": "tile",
+      "ground": "ivory",
+      "label": "ARANT DESIGN",
+      "headline": "Objects for Considered Spaces.",
+      "symbol": true
+    },
+    {
+      "slug": "sample-collection-announcement",
+      "sample": true,
+      "format": "feed",
+      "layout": "tile",
+      "ground": "sand",
+      "label": "New · The Plinth collection",
+      "headline": "A tray with the weight of stone",
+      "accent": "terracotta",
+      "symbol": true
+    },
+    {
+      "slug": "sample-thank-you-story",
+      "sample": true,
+      "format": "story",
+      "layout": "tile",
+      "ground": "ivory",
+      "label": "ARANT DESIGN",
+      "headline": "Thank you for giving this object a place in your home.",
+      "symbol": true
+    },
+    {
+      "slug": "sample-plinth-tray-carousel",
+      "sample": true,
+      "format": "feed",
+      "layout": "carousel",
+      "frames": [
+        {
+          "role": "cover",
+          "layout": "photo",
+          "shot": "Hero",
+          "photo": "photos/plinth-tray/hero.jpg",
+          "title": "Plinth Tray",
+          "ink": "dark"
+        },
+        {
+          "role": "context",
+          "layout": "photo",
+          "shot": "In context",
+          "photo": "photos/plinth-tray/context.jpg"
+        },
+        {
+          "role": "material",
+          "layout": "photo",
+          "shot": "Material detail",
+          "photo": "photos/plinth-tray/detail.jpg"
+        },
+        {
+          "role": "use",
+          "layout": "photo",
+          "shot": "Form or use",
+          "photo": "photos/plinth-tray/use.jpg"
+        },
+        {
+          "role": "making",
+          "layout": "photo",
+          "shot": "Making",
+          "photo": "photos/plinth-tray/making.jpg"
+        },
+        {
+          "role": "information",
+          "layout": "info",
+          "name": "Plinth Tray",
+          "details": [
+            ["Colour", "Sand"],
+            ["Size", "32 × 18 cm"],
+            ["Material", "[Material, from the product record]"],
+            ["Price", "₹1,800"]
+          ]
+        },
+        {
+          "role": "close",
+          "layout": "close",
+          "logo": "stacked",
+          "handle": true,
+          "line": "arantdesign.com"
+        }
+      ]
+    },
+    {
+      "slug": "sample-reel-cover",
+      "sample": true,
+      "format": "story",
+      "layout": "photo",
+      "shot": "A calm frame from the reel",
+      "photo": "photos/plinth-collection/reel-frame.jpg",
+      "title": "The Plinth collection",
+      "ink": "dark"
+    }
+  ]
+}

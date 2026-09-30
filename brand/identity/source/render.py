@@ -2,6 +2,8 @@
 
 rasterize(): many SVG → PNG/JPG jobs in one Chrome session (canvas.toDataURL), transparent unless a background is set.
 pdf():       one SVG → a single-page vector PDF exactly the SVG's size.
+screenshot(): one HTML page → a PNG of exactly width × height px. Unlike rasterize() (an SVG drawn through an image,
+             which can't load web fonts), this renders a real page, so embedded fonts and images render exactly.
 """
 
 import base64
@@ -110,6 +112,28 @@ def pdf(svg, out_path, title="ARANT DESIGN"):
         os.unlink(f.name)
     if not os.path.exists(out_path):
         raise SystemExit(f"PDF export failed for {out_path}")
+
+
+def screenshot(html, out_path, width, height):
+    """Render a self-contained HTML page (fonts and images embedded as data URIs) to a width × height PNG at device
+    scale 1. Virtual time lets embedded fonts load before the capture, so the result is the same on every run."""
+    out_path = os.path.abspath(out_path)
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    with tempfile.NamedTemporaryFile("w", suffix=".html", delete=False, encoding="utf-8") as f:
+        f.write(html)
+    try:
+        _chrome(
+            "--force-device-scale-factor=1",
+            f"--window-size={width},{height}",
+            "--virtual-time-budget=10000",
+            f"--screenshot={out_path}",
+            "file://" + f.name,
+            timeout=180,
+        )
+    finally:
+        os.unlink(f.name)
+    if not os.path.exists(out_path):
+        raise SystemExit(f"Screenshot failed for {out_path}")
 
 
 def write_ico(png_paths, out_path):
