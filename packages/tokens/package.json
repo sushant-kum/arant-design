@@ -2,7 +2,7 @@
   "name": "@arant/tokens",
   "version": "1.1.0",
   "private": true,
-  "description": "ARANT DESIGN design tokens (W3C Design Tokens format): colour and type",
+  "description": "ARANT DESIGN design tokens (W3C Design Tokens format): colour, type, spacing, layout, radius and motion",
   "license": "MIT",
   "type": "module",
   "exports": {

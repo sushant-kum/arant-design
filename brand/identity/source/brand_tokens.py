@@ -46,8 +46,37 @@ def role(key):
 
 
 def palette():
-    """Palette colour keys in file order."""
-    return [k for k in _TOKENS["color"] if not k.startswith("$")]
+    """Palette colour keys in file order (the colours themselves, not the role groups such as color.role)."""
+    return [k for k, v in _TOKENS["color"].items() if not k.startswith("$") and "$value" in v]
+
+
+def tokens():
+    """Every token in the file as (dotted path, token dict), in file order. A token is any node with a $value."""
+    out = []
+
+    def walk(node, path):
+        for k, v in node.items():
+            if k.startswith("$") or not isinstance(v, dict):
+                continue
+            p = f"{path}.{k}" if path else k
+            if "$value" in v:
+                out.append((p, v))
+            else:
+                walk(v, p)
+
+    walk(_TOKENS, "")
+    return out
+
+
+def recorded_mix(path):
+    """A role colour stored as a mix of two colours: $extensions["com.arantdesign"].mix = [a, b, t], where a and b
+    are {alias} references or #hex. Returns the mix recomputed from the current palette, or None if there is none."""
+    spec = _node(path).get("$extensions", {}).get("com.arantdesign", {}).get("mix")
+    if not spec:
+        return None
+    a, b, t = spec
+    a, b = (color(x[1:-1]) if x.startswith("{") else x for x in (a, b))
+    return mix(a, b, t)
 
 
 def fonts(key):
