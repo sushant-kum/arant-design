@@ -27,6 +27,10 @@
     ".claude/**",
     "brand/identity/export/**",
     "brand/identity/print/**",
-    "brand/identity/logo/**"
+    "brand/identity/logo/**",
+    "brand/identity/icons/**",
+    "brand/identity/source/fonts/**",
+    "brand/social/templates/**",
+    "brand/social/posts/**"
   ]
 }

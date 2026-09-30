@@ -3,6 +3,9 @@ brand/identity/logo/
 brand/identity/export/
 brand/identity/print/
 brand/identity/guide/
+brand/identity/icons/
+brand/social/templates/
+brand/social/posts/
 
 # Compiled output
 dist/

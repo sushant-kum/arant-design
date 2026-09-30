@@ -15,7 +15,11 @@
     "brand/identity/logo/**": true,
     "brand/identity/export/**": true,
     "brand/identity/print/**": true,
-    "brand/identity/guide/**": true
+    "brand/identity/guide/**": true,
+    "brand/identity/icons/**": true,
+    "brand/identity/source/fonts/**": true,
+    "brand/social/templates/**": true,
+    "brand/social/posts/**": true
   },
 
   "files.exclude": {

@@ -246,6 +246,9 @@ export default tseslint.config(
       'brand/identity/export/**',
       'brand/identity/print/**',
       'brand/identity/guide/**',
+      'brand/identity/icons/**',
+      'brand/social/templates/**',
+      'brand/social/posts/**',
     ],
   },
   ...[

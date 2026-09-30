@@ -63,21 +63,24 @@ def terrazzo(seed, base, chips, n=90, w=240, h=240):
 # ---------------------------------------------------------------- colour: everything comes from the tokens
 C = {k: tokens.color(k) for k in tokens.palette()}  # brand palette (packages/tokens/tokens.json)
 mix = tokens.mix
-UI = {  # the guide page's own interface shades: tints of the palette, so they follow any palette change
-    "paper": C["ivory"],
+role = tokens.color  # colour roles (color.role.*, color.roleDark.*) resolve to palette colours or recorded mixes
+UI = {  # the guide page's own interface shades: role tokens and tints of the palette, so they follow any change
+    "paper": role("color.role.surface.ground"),
     "sheet": mix("ivory", "#FFFFFF", 0.40),
     "plate": mix("ivory", "#FFFFFF", 0.62),
     "ink": mix("earth", "#000000", 0.34),
-    "muted": mix("earth", "ivory", 0.22),
-    "line": mix("sand", "#FFFFFF", 0.19),
-    "accent": C["terracotta"],
-    "d_paper": mix("charcoal", "#000000", 0.25),
-    "d_sheet": C["charcoal"],
+    "muted": role("color.role.text.muted"),
+    "line": role("color.role.line.subtle"),
+    "secondary": role("color.role.text.secondary"),
+    "accent": role("color.role.accent"),
+    "d_paper": role("color.roleDark.surface.ground"),
+    "d_sheet": role("color.roleDark.surface.alt"),
     "d_plate": mix("charcoal", "earth", 0.22),
-    "d_ink": C["ivory"],
-    "d_muted": mix("sand", "charcoal", 0.18),
-    "d_line": mix("charcoal", "sand", 0.10),
-    "d_accent": mix("terracotta", "#FFFFFF", 0.18),
+    "d_ink": role("color.roleDark.text.primary"),
+    "d_muted": role("color.roleDark.text.muted"),
+    "d_secondary": role("color.roleDark.text.primary"),  # the dark theme has no separate secondary text colour
+    "d_line": role("color.roleDark.line.subtle"),
+    "d_accent": role("color.roleDark.accent"),
 }
 M = {  # material props in the mockups (stone, kraft, table, walls), also mixed from the palette
     "table_hi": mix("ivory", "sand", 0.25),
@@ -100,6 +103,7 @@ M = {  # material props in the mockups (stone, kraft, table, walls), also mixed 
     "chip_sand": mix("sand", "earth", 0.08),
     "chip_grey": mix("sand", "earth", 0.40),
 }
+LABEL_TRACKING = tokens.value("letterSpacing.label")  # every uppercase Jost label; never a literal
 OFF_PALETTE_BLUE = "#2E6FD8"  # deliberately not a brand colour: the "don't recolour" example
 
 TERRAZZO_SAND = terrazzo(
@@ -185,25 +189,25 @@ html = f"""<title>ARANT Brand Kit</title>
 /* Layout: an identity manual. Wide single column, sections as chapters; objects shown on their own surfaces. */
 :root {{
   --paper: {UI["paper"]}; --sheet: {UI["sheet"]}; --ink: {UI["ink"]}; --muted: {UI["muted"]}; --line: {UI["line"]}; --accent: {UI["accent"]};
-  --plate: {UI["plate"]};
+  --plate: {UI["plate"]}; --secondary: {UI["secondary"]}; --tracking-label: {LABEL_TRACKING};
   --f-brand: "Jost", "Futura", "Century Gothic", "Helvetica Neue", Arial, sans-serif;
   --f-edit: "Newsreader", "Iowan Old Style", Georgia, serif;
   --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
 }}
 @media (prefers-color-scheme: dark) {{ :root:not([data-theme="light"]) {{
   --paper: {UI["d_paper"]}; --sheet: {UI["d_sheet"]}; --ink: {UI["d_ink"]}; --muted: {UI["d_muted"]}; --line: {UI["d_line"]}; --accent: {UI["d_accent"]};
-  --plate: {UI["d_plate"]}; color-scheme: dark }} }}
+  --plate: {UI["d_plate"]}; --secondary: {UI["d_secondary"]}; color-scheme: dark }} }}
 :root[data-theme="dark"] {{
   --paper: {UI["d_paper"]}; --sheet: {UI["d_sheet"]}; --ink: {UI["d_ink"]}; --muted: {UI["d_muted"]}; --line: {UI["d_line"]}; --accent: {UI["d_accent"]};
-  --plate: {UI["d_plate"]}; color-scheme: dark }}
+  --plate: {UI["d_plate"]}; --secondary: {UI["d_secondary"]}; color-scheme: dark }}
 * {{ box-sizing: border-box }}
 body {{ background: var(--paper); color: var(--ink); font: 16px/1.6 var(--f-brand); padding: 0 20px; }}
 .wrap {{ max-width: 1120px; margin: 0 auto; padding-block: 48px 96px; display: grid; gap: 88px; }}
 svg {{ display: block; max-width: 100%; height: auto; }}
 .mono {{ font-family: var(--f-mono); font-size: 12px; letter-spacing: .02em; }}
-.eyebrow {{ font: 500 12px/1 var(--f-brand); letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }}
+.eyebrow {{ font: 500 12px/1 var(--f-brand); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--muted); }}
 h2 {{ font: 300 clamp(30px, 4.4vw, 44px)/1.1 var(--f-edit); margin: 0; text-wrap: balance; }}
-h3 {{ font: 500 13px/1.3 var(--f-brand); letter-spacing: .16em; text-transform: uppercase; margin: 0; }}
+h3 {{ font: 500 13px/1.3 var(--f-brand); letter-spacing: var(--tracking-label); text-transform: uppercase; margin: 0; }}
 p {{ margin: 0; max-width: 64ch; }}
 .lede {{ font: 300 21px/1.5 var(--f-edit); max-width: 58ch; }}
 section {{ display: grid; gap: 28px; }}
@@ -216,7 +220,10 @@ section > header {{ display: grid; gap: 12px; }}
 @media (prefers-color-scheme: dark) {{ :root:not([data-theme="light"]) .hero-plate {{ color: {C["ivory"]} }} }}
 .hero-plate svg {{ width: min(100%, 720px); margin: 0 auto; }}
 .hero-text {{ display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; align-items: start; }}
-.hero-text .tagline {{ font: 500 14px/1.4 var(--f-brand); letter-spacing: .3em; text-transform: uppercase; color: var(--accent); }}
+/* Terracotta never sets small text: an Earth label with a short Terracotta rule beside it carries the accent */
+.hero-text .tagline {{ font: 500 14px/1.4 var(--f-brand); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--secondary);
+  display: flex; align-items: center; gap: .9em; }}
+.hero-text .tagline::before, .hier .h-tag::before {{ content: ""; flex: none; width: 2em; height: 2px; background: var(--accent); }}
 
 /* versions */
 .versions {{ display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; }}
@@ -236,14 +243,14 @@ section > header {{ display: grid; gap: 12px; }}
 .construct dd {{ margin: 0; color: var(--muted); }}
 .diagram .ink {{ fill: var(--ink); opacity: .92 }}
 .diagram .dim {{ stroke: var(--accent); stroke-width: 1.4; fill: none }}
-.diagram .lbl {{ fill: var(--accent); font: 500 11px var(--f-mono); }}
+.diagram .lbl {{ fill: var(--muted); font: 500 11px var(--f-mono); }}
 .diagram .guide {{ stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 4; fill: none; opacity: .6 }}
 
 /* tables */
 .table-wrap {{ overflow-x: auto; }}
 table {{ border-collapse: collapse; width: 100%; min-width: 620px; font-size: 15px; }}
 th, td {{ text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }}
-th {{ font: 500 12px var(--f-brand); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }}
+th {{ font: 500 12px var(--f-brand); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--muted); }}
 td {{ font-variant-numeric: tabular-nums; }}
 
 /* colour */
@@ -267,10 +274,11 @@ td {{ font-variant-numeric: tabular-nums; }}
 .sample-sans {{ font: 400 40px/1.1 var(--f-brand); letter-spacing: .02em; }}
 .sample-serif {{ font: 300 40px/1.15 var(--f-edit); }}
 .hier {{ background: var(--plate); padding: 32px; display: grid; gap: 10px; }}
-.hier .h-tag {{ font: 500 12px/1 var(--f-brand); letter-spacing: .3em; text-transform: uppercase; color: var(--accent); }}
+.hier .h-tag {{ font: 500 12px/1 var(--f-brand); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--secondary);
+  display: flex; align-items: center; gap: .9em; }}
 .hier .h-title {{ font: 300 38px/1.1 var(--f-edit); }}
 .hier .h-body {{ font: 400 16px/1.6 var(--f-brand); max-width: 56ch; }}
-.hier .h-meta {{ font: 500 12px/1.4 var(--f-brand); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }}
+.hier .h-meta {{ font: 500 12px/1.4 var(--f-brand); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--muted); }}
 
 /* mockups */
 .mocks {{ display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; }}
@@ -325,7 +333,7 @@ td {{ font-variant-numeric: tabular-nums; }}
   display: grid; place-items: center; align-content: center; gap: 12px; text-align: center; padding: 8%; }}
 .thanks svg {{ width: 16% }}
 .thanks p {{ font: 300 clamp(12px, 1.5vw, 18px)/1.35 var(--f-edit); }}
-.thanks small {{ font: 500 clamp(8px, .8vw, 10px)/1 var(--f-brand); letter-spacing: .28em; text-transform: uppercase; color: {M["caption"]}; }}
+.thanks small {{ font: 500 clamp(8px, .8vw, 10px)/1 var(--f-brand); letter-spacing: var(--tracking-label); text-transform: uppercase; color: {M["caption"]}; }}
 .phone {{ width: 46%; aspect-ratio: .5; background: {UI["plate"]}; border-radius: 26px; box-shadow: 0 0 0 6px {C["charcoal"]}, 0 20px 30px rgba(20,15,10,.35);
   padding: 9% 7%; display: grid; align-content: start; gap: 8px; color: {C["charcoal"]}; }}
 .ig-top {{ display: grid; grid-template-columns: 30% minmax(0, 1fr); gap: 8%; align-items: center; }}
@@ -338,11 +346,13 @@ td {{ font-variant-numeric: tabular-nums; }}
 .web {{ width: 88%; aspect-ratio: 1.6; background: {UI["sheet"]}; box-shadow: 0 18px 30px rgba(30,20,10,.22); display: grid; grid-template-rows: auto 1fr; }}
 .web .bar {{ display: flex; align-items: center; justify-content: space-between; padding: 3.2% 4.5%; border-bottom: 1px solid {M["rule"]}; color: {C["earth"]}; gap: 12px; }}
 .web .bar svg {{ width: 34% }}
-.web nav {{ display: flex; gap: 6%; font: 500 clamp(7px, .8vw, 10px)/1 var(--f-brand); letter-spacing: .18em; text-transform: uppercase; color: {C["earth"]}; flex: 1; justify-content: flex-end; }}
+.web nav {{ display: flex; gap: 6%; font: 500 clamp(7px, .8vw, 10px)/1 var(--f-brand); letter-spacing: var(--tracking-label); text-transform: uppercase; color: {C["earth"]}; flex: 1; justify-content: flex-end; }}
 .web .hero-w {{ display: grid; grid-template-columns: 1fr 1fr; }}
 .web .hero-w div:first-child {{ padding: 8% 6%; display: grid; align-content: center; gap: 8px; color: {UI["ink"]}; }}
 .web .hero-w b {{ font: 300 clamp(13px, 2vw, 24px)/1.15 var(--f-edit); }}
-.web .hero-w span {{ font: 500 clamp(6px, .7vw, 9px)/1 var(--f-brand); letter-spacing: .2em; text-transform: uppercase; color: {C["terracotta"]}; }}
+.web .hero-w span {{ font: 500 clamp(6px, .7vw, 9px)/1 var(--f-brand); letter-spacing: var(--tracking-label); text-transform: uppercase; color: {C["earth"]};
+  display: flex; align-items: center; gap: .9em; }}
+.web .hero-w span::before {{ content: ""; flex: none; width: 2em; height: 1px; background: {C["terracotta"]}; }}
 .web .hero-w div:last-child {{ background: url("{TERRAZZO_SAND}") 0 0 / 180px; }}
 .sign {{ background: linear-gradient({M["wall_hi"]}, {C["charcoal"]}); }}
 .sign .wall {{ position: absolute; inset: 0; background: repeating-linear-gradient(90deg, rgba(255,255,255,.035) 0 2px, transparent 2px 64px); }}
@@ -370,7 +380,7 @@ td {{ font-variant-numeric: tabular-nums; }}
 .dont figcaption {{ font-size: 13px; color: var(--muted); }}
 .files {{ columns: 2 320px; column-gap: 32px; font-size: 14px; }}
 .files div {{ break-inside: avoid; padding: 10px 0; border-bottom: 1px solid var(--line); display: grid; gap: 2px; }}
-.files code {{ font-family: var(--f-mono); font-size: 12.5px; color: var(--accent); }}
+.files code {{ font-family: var(--f-mono); font-size: 12.5px; color: var(--secondary); }}
 
 @media (max-width: 860px) {{
   .versions, .mocks {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
@@ -393,7 +403,7 @@ td {{ font-variant-numeric: tabular-nums; }}
     <div class="hero-text">
       <p class="lede">Two equal stone slabs lean together and hold a pebble between them. The A becomes an object in balance: architectural, tactile and quiet.</p>
       <div style="display:grid;gap:14px">
-        <div class="tagline">Objects for considered spaces</div>
+        <div class="tagline">Objects for Considered Spaces.</div>
         <p class="note">Every opening in the symbol, the split between the slabs and the gap around the pebble, has the same width. That one rule is what lets the mark survive a rubber stamp, a blind deboss and a silicone mould.</p>
       </div>
     </div>
@@ -445,15 +455,17 @@ td {{ font-variant-numeric: tabular-nums; }}
       <tbody>
         <tr><td>Horizontal lockup</td><td>180 px wide</td><td>25 mm wide</td><td>82 mm wide. Below that, use the symbol or ARANT only.</td></tr>
         <tr><td>Stacked lockup</td><td>120 px wide</td><td>18 mm wide</td><td>54 mm wide</td></tr>
+        <tr><td>One-line lockup</td><td>190 px wide</td><td>28 mm wide</td><td>116 mm wide. Below that, use the symbol or ARANT only.</td></tr>
+        <tr><td>Wordmark</td><td>120 px wide</td><td>18 mm wide</td><td>54 mm wide</td></tr>
         <tr><td>ARANT only</td><td>16 px cap height</td><td>2.5 mm cap height</td><td>12 mm cap height</td></tr>
         <tr><td>Symbol</td><td>24 px (the split closes up at 16 px, where it reads as a solid A with a pebble)</td><td>6 mm tall</td><td>12 mm tall</td></tr>
       </tbody></table></div>
-    <p class="note">These are production rules of thumb. Before the first run, make one proof rubber stamp and one test pour at the smallest size you plan to use.</p>
+    <p class="note">Widths are measured on the artwork, not the file's margin. The narrowest opening in every lockup is the split in the As of ARANT. These are production rules of thumb. Before the first run, make one proof rubber stamp and one test pour at the smallest size you plan to use.</p>
   </section>
 
   <section>
     <header><div class="eyebrow">04 · Colour</div><h2>Earth on ivory, with one warm accent</h2>
-      <p>The logo lives in Earth Brown or Deep Charcoal on warm grounds. Terracotta is the accent: use it for one element per piece, like a seal, a band or a price.</p></header>
+      <p>The logo lives in Earth Brown or Deep Charcoal on warm grounds. Terracotta is the accent: use it for one element per piece, like a seal, a band or a rule. As a text colour it is for 24 px and larger only.</p></header>
     <div class="palette">{palette_rows}</div>
     <p class="note">* CMYK values are straight conversions from RGB, a starting point only. Ask your printer to build the dark browns as rich blacks and confirm on a proof. Match Pantone references from a physical Formula Guide against the printed proof; screen previews of Pantone colours are unreliable.</p>
     <h3 style="margin-top:12px">Approved pairings</h3>
@@ -464,8 +476,8 @@ td {{ font-variant-numeric: tabular-nums; }}
     <header><div class="eyebrow">05 · Typography</div><h2>A geometric sans and an editorial serif</h2>
       <p>The logo is custom-drawn and never typed. For everything around it, use two open-licence families from Google Fonts. Both are under the SIL Open Font License, free for commercial use, print and web.</p></header>
     <div class="type">
-      <div class="face"><h3>Primary · Jost</h3><div class="sample-sans">Objects for considered spaces</div>
-        <p class="spec">Geometric, like the wordmark. Use it for labels, navigation, product details, prices and packaging copy. Regular 400 and Medium 500; set uppercase labels with +0.2 em tracking.</p></div>
+      <div class="face"><h3>Primary · Jost</h3><div class="sample-sans">Objects for Considered Spaces.</div>
+        <p class="spec">Geometric, like the wordmark. Use it for labels, navigation, product details, prices and packaging copy. Regular 400 and Medium 500; set uppercase labels with +{LABEL_TRACKING} tracking.</p></div>
       <div class="face"><h3>Secondary · Newsreader</h3><div class="sample-serif">Cast by hand, finished slowly.</div>
         <p class="spec">Editorial serif for headlines, product names, stories and cards. Light 300 for display, Regular 400 for text. Never in all caps.</p></div>
     </div>
@@ -489,9 +501,9 @@ td {{ font-variant-numeric: tabular-nums; }}
       <figure class="mock m3"><div class="scene kraft"><div class="seal">{SYM_REV}<svg class="ring" viewBox="0 0 200 200" aria-hidden="true"><defs><path id="sp" d="M100 18a82 82 0 1 1 -0.1 0"/></defs><text fill="{C["ivory"]}" style="font: 500 11.5px var(--f-brand); letter-spacing: 5.3px"><textPath href="#sp">ARANT DESIGN · OBJECTS FOR CONSIDERED SPACES ·</textPath></text></svg></div></div><figcaption>Seal sticker for tissue and mailers</figcaption></figure>
       <figure class="mock m3"><div class="scene s-table"><div class="thanks">{SYM}<p>Thank you for giving this object a place in your home.</p><small>ARANT DESIGN</small></div></div><figcaption>Thank-you card</figcaption></figure>
       <figure class="mock m3"><div class="scene s-table"><div class="card-e">{SYM_REV}</div><div class="card-i">{HORIZ}<div class="who"><b>STUDIO</b>hello@arantdesign.com<br>arantdesign.com · @arantdesign</div></div></div><figcaption>Business card, front and back</figcaption></figure>
-      <figure class="mock m3"><div class="scene" style="background:{M["scene"]}"><div class="phone"><div class="ig-top"><div class="avatar">{SYM}</div><div><div class="ig-name">arantdesign</div><div class="ig-bio">ARANT DESIGN<br>Objects for considered spaces.<br>Small-batch, hand-finished in India.</div></div></div>
+      <figure class="mock m3"><div class="scene" style="background:{M["scene"]}"><div class="phone"><div class="ig-top"><div class="avatar">{SYM}</div><div><div class="ig-name">arantdesign</div><div class="ig-bio">ARANT DESIGN<br>Objects for Considered Spaces.<br>Small-batch, hand-finished in India.</div></div></div>
         <div class="ig-grid"><i style="background:url('{TERRAZZO_SAND}') 0 0/90px"></i><i style="background:{C["earth"]}"></i><i style="background:{C["sand"]}"></i><i style="background:{C["terracotta"]}"></i><i style="background:url('{TERRAZZO_IVORY}') 0 0/80px"></i><i style="background:{C["olive"]}"></i><i style="background:{C["ivory"]}"></i><i style="background:url('{TERRAZZO_SAND}') 40px 20px/120px"></i><i style="background:{C["charcoal"]}"></i></div></div></div><figcaption>Instagram profile: the symbol as the avatar</figcaption></figure>
-      <figure class="mock m3"><div class="scene s-table"><div class="web"><div class="bar">{ONELINE}<nav><span>Objects</span><span>Studio</span><span>Journal</span></nav></div><div class="hero-w"><div><span>The Plinth collection</span><b>Objects for considered spaces</b></div><div></div></div></div></div><figcaption>Website header</figcaption></figure>
+      <figure class="mock m3"><div class="scene s-table"><div class="web"><div class="bar">{ONELINE}<nav><span>Objects</span><span>Studio</span><span>Journal</span></nav></div><div class="hero-w"><div><span>The Plinth collection</span><b>Objects for Considered Spaces.</b></div><div></div></div></div></div><figcaption>Website header</figcaption></figure>
       <figure class="mock m3"><div class="scene sign"><div class="wall"></div><div class="fascia">{ONELINE}</div><div class="door"></div></div><figcaption>Studio signage: ivory on charcoal</figcaption></figure>
       <figure class="mock m6"><div class="scene wrap-band"><div class="tissue" aria-hidden="true">{"".join(f"<span>{SYM}</span>" for _ in range(64))}</div><div class="band-strip">{ONELINE}</div></div><figcaption>Tissue paper pattern in sand, with the earth-brown wrapping band</figcaption></figure>
     </div>
@@ -518,6 +530,7 @@ td {{ font-variant-numeric: tabular-nums; }}
       <div><code>export/symbol/</code>favicon.ico, favicon.svg, apple-touch and PWA icons, site.webmanifest, head-snippet.html</div>
       <div><code>print/pdf/</code>Vector PDFs in earth, black and terracotta. They open in Illustrator, Affinity and InDesign.</div>
       <div><code>print/jpg/</code>JPGs on warm ivory for email, documents and marketplaces</div>
+      <div><code>icons/</code>Interface icons: 24 px line SVGs in currentColor, an SVG sprite and a preview sheet</div>
       <div><code>source/</code>The Python scripts that generate every file, so the geometry can be rebuilt exactly</div>
     </div>
   </section>
