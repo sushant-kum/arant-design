@@ -1,0 +1,39 @@
+packages:
+  - apps/*
+  - packages/*
+
+catalog:
+  '@commitlint/cli': ^21.2.3
+  '@commitlint/config-conventional': ^21.2.3
+  '@eslint/js': ^10.0.1
+  '@secretlint/secretlint-rule-preset-recommend': ^13.0.6
+  commitizen: ^4.3.2
+  cz-conventional-changelog: ^3.3.0
+  eslint: ^10.11.0
+  eslint-config-prettier: ^10.1.8
+  eslint-import-resolver-typescript: ^4.4.5
+  eslint-plugin-import-x: ^4.17.1
+  eslint-plugin-jsdoc: ^64.5.4
+  eslint-plugin-no-secrets: ^2.3.3
+  eslint-plugin-prettier: ^5.5.6
+  eslint-plugin-unused-imports: ^4.4.1
+  husky: ^9.1.7
+  knip: ^6.38.0
+  lint-staged: ^17.6.0
+  prettier: ^3.9.9
+  secretlint: ^13.0.6
+  stylelint: ^17.15.0
+  stylelint-config-standard: ^40.0.0
+  stylelint-config-standard-scss: ^17.0.0
+  typescript: ~6.0.3 # typescript-eslint 8 supports TypeScript < 6.1
+  typescript-eslint: ^8.70.1
+
+allowBuilds:
+  unrs-resolver: false
+
+cleanupUnusedCatalogs: true
+minimumReleaseAge: 4320
+blockExoticSubdeps: true
+trustPolicy: 'no-downgrade'
+trustPolicyIgnoreAfter: 4320
+catalogMode: prefer

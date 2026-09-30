@@ -1,0 +1,66 @@
+{
+  "name": "arant-design",
+  "version": "1.1.0",
+  "private": true,
+  "description": "ARANT DESIGN monorepo: brand identity, design language, mockups, website and shared packages",
+  "license": "SEE LICENSE IN LICENSE",
+  "type": "module",
+  "scripts": {
+    "prepare": "husky",
+    "identity:check": "cd brand/identity/source && python3 check_tokens.py",
+    "identity:logo": "cd brand/identity/source && python3 build_logo.py",
+    "identity:exports": "cd brand/identity/source && python3 build_exports.py",
+    "identity:print": "cd brand/identity/source && python3 build_print.py",
+    "identity:guide": "cd brand/identity/source && python3 build_guide.py",
+    "identity:build": "pnpm identity:check && pnpm identity:logo && pnpm identity:exports && pnpm identity:print && pnpm identity:guide",
+    "lint": "eslint . --no-error-on-unmatched-pattern",
+    "lint:fix": "eslint . --no-error-on-unmatched-pattern --fix",
+    "lint:error": "eslint . --no-error-on-unmatched-pattern --quiet",
+    "format:fix": "prettier --write .",
+    "format:check": "prettier --check .",
+    "stylelint": "stylelint '**/*.{css,scss,sass}' --allow-empty-input",
+    "stylelint:error": "pnpm run stylelint --quiet",
+    "stylelint:fix": "pnpm run stylelint --fix",
+    "secretlint": "secretlint \"**/*\"",
+    "knip": "knip",
+    "tool::commit": "cz",
+    "lint:py": "ruff check . && ruff format --check .",
+    "format:py": "ruff format . && ruff check --fix ."
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^12.8.1",
+      "onFail": "download"
+    }
+  },
+  "devDependencies": {
+    "@commitlint/cli": "catalog:",
+    "@commitlint/config-conventional": "catalog:",
+    "@eslint/js": "catalog:",
+    "@secretlint/secretlint-rule-preset-recommend": "catalog:",
+    "commitizen": "catalog:",
+    "cz-conventional-changelog": "catalog:",
+    "eslint": "catalog:",
+    "eslint-config-prettier": "catalog:",
+    "eslint-import-resolver-typescript": "catalog:",
+    "eslint-plugin-import-x": "catalog:",
+    "eslint-plugin-jsdoc": "catalog:",
+    "eslint-plugin-no-secrets": "catalog:",
+    "eslint-plugin-prettier": "catalog:",
+    "eslint-plugin-unused-imports": "catalog:",
+    "husky": "catalog:",
+    "knip": "catalog:",
+    "lint-staged": "catalog:",
+    "prettier": "catalog:",
+    "secretlint": "catalog:",
+    "stylelint": "catalog:",
+    "stylelint-config-standard": "catalog:",
+    "stylelint-config-standard-scss": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:"
+  }
+}
