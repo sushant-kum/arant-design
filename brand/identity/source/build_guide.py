@@ -201,8 +201,8 @@ html = f"""<title>ARANT Brand Kit</title>
   --paper: {UI["d_paper"]}; --sheet: {UI["d_sheet"]}; --ink: {UI["d_ink"]}; --muted: {UI["d_muted"]}; --line: {UI["d_line"]}; --accent: {UI["d_accent"]};
   --plate: {UI["d_plate"]}; --secondary: {UI["d_secondary"]}; color-scheme: dark }}
 * {{ box-sizing: border-box }}
-body {{ background: var(--paper); color: var(--ink); font: 16px/1.6 var(--f-brand); padding: 0 20px; }}
-.wrap {{ max-width: 1120px; margin: 0 auto; padding-block: 48px 96px; display: grid; gap: 88px; }}
+body {{ background: var(--paper); color: var(--ink); font: 16px/1.6 var(--f-brand); }}
+.wrap {{ max-width: 1160px; margin: 0 auto; padding: 48px 20px 96px; display: grid; gap: 88px; }}
 svg {{ display: block; max-width: 100%; height: auto; }}
 .mono {{ font-family: var(--f-mono); font-size: 12px; letter-spacing: .02em; }}
 .eyebrow {{ font: 500 12px/1 var(--f-brand); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--muted); }}

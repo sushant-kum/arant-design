@@ -162,7 +162,8 @@ FOOT = "</body>\n</html>\n"
 
 # A slim bar above a wrapped page, so every page leads back to the index. Its colours match both pages' grounds.
 BACK_CSS = f"""{THEME}
-.site-back {{ background: var(--ground); border-bottom: {HAIR}; padding: 12px {GUTTER}; }}
+.site-back {{ background: var(--ground); border-bottom: {HAIR}; padding-block: 12px; }}
+.site-back div {{ max-width: var(--back-column); margin-inline: auto; padding-inline: var(--back-gutter); }}
 .site-back a {{ font: 500 12px/1.3 {stack("sans")}; letter-spacing: {TRACK}; text-transform: uppercase;
   color: var(--muted); text-decoration: none; }}
 .site-back a:hover {{ color: var(--head); text-decoration: underline; text-underline-offset: .25em; }}
@@ -170,14 +171,19 @@ BACK_CSS = f"""{THEME}
 """
 
 
-def wrap(page_html, description):
+def wrap(page_html, description, column, gutter):
     """A full document around an artifact-shaped page (no doctype or head of its own). Only the leading comment and
-    <title> are lifted out, so the page's own content, styles and fonts stay exactly as they are."""
+    <title> are lifted out, so the page's own content, styles and fonts stay exactly as they are. `column` and
+    `gutter` are the page's own content column (max-width, border-box) and side padding, so the back link lines up
+    with the content below it while the bar's hairline runs edge to edge."""
     body = re.sub(r"^\s*<!--.*?-->\s*", "", page_html, count=1, flags=re.S)
     title = re.match(r"\s*<title>(.*?)</title>\s*", body, re.S)
     if not title:
         raise SystemExit("a wrapped page must start with its <title>")
-    back = '<nav class="site-back" aria-label="Site"><a href="../">← ARANT DESIGN · Brand pages</a></nav>\n'
+    back = (
+        f'<nav class="site-back" aria-label="Site" style="--back-column: {column}; --back-gutter: {gutter}">'
+        '<div><a href="../">← ARANT DESIGN · Brand pages</a></div></nav>\n'
+    )
     return head(html.unescape(title.group(1)), description, 1, BACK_CSS) + back + body[title.end() :] + FOOT
 
 
@@ -361,11 +367,23 @@ def main():
     write("index.html", index_page())
     write(
         "brand-kit/index.html",
-        wrap(read("brand", "identity", "guide", "arant-brand-kit.html"), "The ARANT DESIGN identity kit."),
+        # The guide's .wrap: a 1160px border-box column with 20px side padding (build_guide.py)
+        wrap(
+            read("brand", "identity", "guide", "arant-brand-kit.html"),
+            "The ARANT DESIGN identity kit.",
+            "1160px",
+            "20px",
+        ),
     )
     write(
         "design-language/index.html",
-        wrap(read("brand", "design-language", "arant-design-language.html"), "The ARANT DESIGN design language."),
+        # The page's .wrap: a 1120px border-box column with the gutter token as side padding
+        wrap(
+            read("brand", "design-language", "arant-design-language.html"),
+            "The ARANT DESIGN design language.",
+            V("container.content"),
+            GUTTER,
+        ),
     )
     write("icons/index.html", icons_page())
     write("social/index.html", social_page())
