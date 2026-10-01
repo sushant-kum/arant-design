@@ -27,6 +27,7 @@ pnpm identity:build       # check → logo → exports → print → guide → i
 pnpm identity:check       # fail on a hard-coded brand hex in brand/identity/source/*.py or inconsistent tokens.json
 pnpm identity:logo        # one step at a time: identity:logo | exports | print | guide | icons | social
 pnpm identity:fonts       # re-fetch the vendored Jost/Newsreader files (needs network; not part of identity:build)
+pnpm site:build           # GitHub Pages site → site/ (gitignored; stdlib only, no Chrome)
 pnpm lint | lint:fix      # ESLint (flat config, eslint.config.mjs)
 pnpm stylelint            # CSS/SCSS
 pnpm format:check | format:fix   # Prettier
@@ -95,6 +96,16 @@ Change the source and rebuild.
 
 Hex values and minimum sizes are also written by hand in the READMEs (documentation only, not read by any build);
 update them when the palette or geometry changes.
+
+### Brand pages site (GitHub Pages)
+
+`build_site.py` wraps `guide/arant-brand-kit.html` and `brand/design-language/arant-design-language.html` in full HTML
+documents and writes them, a landing page, icon and social-template pages and only the assets they reference into
+`site/`. `.github/workflows/pages.yml` runs it on push to `main` (paths `brand/**`, `packages/tokens/**`) and deploys to
+https://sushant-kum.github.io/arant-design/. Keep every link inside the site relative (it is served under
+`/arant-design/`). `brand/design-language/arant-design-language.html` is **hand-edited**, not generated, and
+Prettier-ignored on purpose: update it whenever the design-language Markdown changes. It is also the source of the
+design-language Claude artifact.
 
 ## Repo conventions and tooling quirks
 

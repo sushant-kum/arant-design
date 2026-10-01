@@ -5,6 +5,10 @@ and you can make a correct first decision about anything. Detail, reasoning and 
 [`brand/design-language/`](brand/design-language/README.md). Values live in the canonical sources, which this file
 names but doesn't copy. When this file and a canonical source disagree, the source wins; fix this file.
 
+Online: the [brand kit](https://sushant-kum.github.io/arant-design/brand-kit/) and the
+[design language](https://sushant-kum.github.io/arant-design/design-language/), one page each, at
+[sushant-kum.github.io/arant-design](https://sushant-kum.github.io/arant-design/).
+
 Every rule is labelled:
 
 - **Established**: backed by a file in this repo (named in each section). Changing it is a brand decision.

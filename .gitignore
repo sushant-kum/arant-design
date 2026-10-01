@@ -25,6 +25,9 @@ build/
 coverage/
 *.log
 
+# GitHub Pages site, built by `pnpm site:build` (and in CI by .github/workflows/pages.yml)
+site/
+
 # Secrets
 .env
 .env.*

@@ -476,6 +476,8 @@ When asked to modify or create a design:
 5. Check the result against `DESIGN.md`.
 6. Check consistency with existing identity assets.
 7. Avoid introducing unnecessary design patterns.
+8. If you changed `DESIGN.md` or a design-language chapter, update `brand/design-language/arant-design-language.html`
+   to match (it feeds the GitHub Pages site and the design-language artifact).
 
 If a request conflicts with established brand rules, explain the conflict and propose a compatible alternative.
 

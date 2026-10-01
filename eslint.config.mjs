@@ -249,6 +249,8 @@ export default tseslint.config(
       'brand/identity/icons/**',
       'brand/social/templates/**',
       'brand/social/posts/**',
+      // built GitHub Pages site (`pnpm site:build`)
+      'site/**',
     ],
   },
   ...[

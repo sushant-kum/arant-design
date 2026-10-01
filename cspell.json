@@ -18,7 +18,16 @@
     "lockups",
     "Pantone",
     "webmanifest",
-    "maskable"
+    "maskable",
+    "CALSO",
+    "Jesmonite",
+    "HANDCAST",
+    "CMYK",
+    "WCAG",
+    "glassmorphism",
+    "lede",
+    "opsz",
+    "rangoli"
   ],
   "ignorePaths": [
     "pnpm-lock.yaml",
@@ -31,6 +40,7 @@
     "brand/identity/icons/**",
     "brand/identity/source/fonts/**",
     "brand/social/templates/**",
-    "brand/social/posts/**"
+    "brand/social/posts/**",
+    "site/**"
   ]
 }

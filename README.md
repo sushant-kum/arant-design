@@ -6,6 +6,21 @@
 holds everything the studio designs and builds: the brand identity, its design language, product and packaging
 mockups, the website, and the shared code they depend on.
 
+## Brand kit and design language
+
+Browse the brand pages online at **[sushant-kum.github.io/arant-design](https://sushant-kum.github.io/arant-design/)**:
+
+- [Brand kit](https://sushant-kum.github.io/arant-design/brand-kit/): lockups, construction, clear space and minimum
+  sizes, colour, type, the mark in use.
+- [Design language](https://sushant-kum.github.io/arant-design/design-language/): principles, layout, photography,
+  packaging, digital, social and voice.
+- [Icons](https://sushant-kum.github.io/arant-design/icons/) and
+  [Instagram templates](https://sushant-kum.github.io/arant-design/social/).
+
+The site is built from this repo by `pnpm site:build` and published by
+[`.github/workflows/pages.yml`](.github/workflows/pages.yml) on every push to `main` that touches `brand/` or the
+tokens.
+
 ## What's here
 
 | Area            | Path                                              | Status         | What it holds                                                              |
@@ -67,6 +82,7 @@ pnpm identity:build   # rebuild all brand identity files from the tokens
 | `pnpm identity:social`  | Render `brand/social/templates/` and `brand/social/posts/` (Instagram frames)               |
 | `pnpm identity:fonts`   | Restore the pinned Jost and Newsreader files used for rendering (needs network access)      |
 | `pnpm identity:build`   | All of the above, in order                                                                  |
+| `pnpm site:build`       | Build the GitHub Pages site into `site/` (gitignored) from the committed identity files     |
 | `pnpm lint:py`          | Check Python formatting and lint rules with Ruff (config in `ruff.toml`)                    |
 | `pnpm format:py`        | Format the Python scripts and apply safe lint fixes                                         |
 | `pnpm lint`             | Lint JS/TS with ESLint (`eslint.config.mjs`); `lint:fix` fixes, `lint:error` hides warnings |

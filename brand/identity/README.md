@@ -5,7 +5,9 @@
 **Objects for Considered Spaces.** The ARANT DESIGN logo system: master artwork, ready-to-use exports, print files,
 the brand guide, and the scripts that generate all of them. Part of the [ARANT DESIGN monorepo](../../README.md).
 
-**Version 1.1** · Brand guide: open [`guide/arant-brand-kit.html`](guide/arant-brand-kit.html) in a browser.
+**Version 1.1** · Brand guide: [online](https://sushant-kum.github.io/arant-design/brand-kit/), or open
+[`guide/arant-brand-kit.html`](guide/arant-brand-kit.html) in a browser. All brand pages:
+[sushant-kum.github.io/arant-design](https://sushant-kum.github.io/arant-design/).
 
 ---
 

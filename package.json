@@ -15,6 +15,7 @@
     "identity:icons": "cd brand/identity/source && python3 build_icons.py",
     "identity:social": "cd brand/identity/source && python3 build_social.py",
     "identity:fonts": "cd brand/identity/source && python3 fetch_fonts.py",
+    "site:build": "cd brand/identity/source && python3 build_site.py",
     "identity:build": "pnpm identity:check && pnpm identity:logo && pnpm identity:exports && pnpm identity:print && pnpm identity:guide && pnpm identity:icons && pnpm identity:social",
     "lint": "eslint . --no-error-on-unmatched-pattern",
     "lint:fix": "eslint . --no-error-on-unmatched-pattern --fix",

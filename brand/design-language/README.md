@@ -3,6 +3,10 @@
 How the brand looks, behaves and speaks beyond the logo. Part of the
 [ARANT DESIGN monorepo](../../README.md).
 
+Read it online as one page: [design language](https://sushant-kum.github.io/arant-design/design-language/) (source:
+[`arant-design-language.html`](arant-design-language.html), a hand-edited summary of these files; update it when
+they change). The brand kit is online too: [brand kit](https://sushant-kum.github.io/arant-design/brand-kit/).
+
 The short, stand-alone contract is [`DESIGN.md`](../../DESIGN.md) at the repo root: read it first. The files here
 hold the reasoning, detail and examples behind each of its sections. They don't repeat values that live elsewhere:
 

@@ -1,0 +1,1059 @@
+<!--
+  ARANT DESIGN · Design language page. Hand-edited, not generated.
+  It summarises DESIGN.md and the Markdown chapters in this folder: update it whenever they change.
+  Artifact-shaped on purpose (no doctype or head, like the brand kit), so it can be republished as the Claude
+  artifact; `pnpm site:build` wraps it in a full document for GitHub Pages.
+  cspell:ignore ctable tscroll hier dont
+-->
+<title>ARANT Design Language</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap">
+<style>
+/* Layout: a single 1120px editorial column; each chapter sets its heading in a narrow left column (4/12) beside its content (8/12), stacking on phones. Hairlines, square plates, no shadows. */
+:root {
+  /* Palette: packages/tokens/tokens.json color.* (fixed; used for swatches and physical samples) */
+  --c-ivory: #F1E9DC;
+  --c-sand: #D8C3A7;
+  --c-earth: #4A3527;
+  --c-charcoal: #292622;
+  --c-terracotta: #B85F32;
+  --c-olive: #64654A;
+  --c-kraft: #C4A57F;
+  --c-kraft-ink: #3B2A1F;      /* mix(earth, #000000, 0.20), the guide's kraft ink */
+
+  /* Roles, light (colour.md "Roles for implementation"; tints as the brand guide) */
+  --paper: #F1E9DC;            /* surface.ground = ivory */
+  --plate: #F7F2EA;            /* guide sheet tint, flat plate */
+  --ink: #292622;              /* text.primary = charcoal */
+  --head: #4A3527;             /* text.secondary = earth */
+  --muted: #6F5D4F;            /* mix(earth, ivory, 0.22) */
+  --line: #DFCEB8;             /* mix(sand, #FFFFFF, 0.19) */
+  --strong: #4A3527;           /* line.strong = earth */
+  --accent: #B85F32;           /* terracotta */
+  --logo: #4A3527;             /* logo.default */
+  --btn-bg: #292622;
+  --btn-bg-hover: #4A3527;
+  --btn-fg: #F1E9DC;
+
+  /* Type: tokens font.family.* */
+  --sans: "Jost", "Futura", "Century Gothic", "Helvetica Neue", Arial, sans-serif;
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --track: 0.2em;              /* letterSpacing.label */
+
+  /* Layout and motion: tokens gutter.*, space.9, duration.quick */
+  --gutter: clamp(20px, 5vw, 64px);
+  --section: 96px;
+  --quick: 150ms;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #1F1C1A; --plate: #292622; --ink: #F1E9DC; --head: #F1E9DC; --muted: #B8A78F;
+    --line: #3A362F; --strong: #F1E9DC; --accent: #C57C57; --logo: #F1E9DC;
+    --btn-bg: #F1E9DC; --btn-bg-hover: #D8C3A7; --btn-fg: #292622;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #1F1C1A; --plate: #292622; --ink: #F1E9DC; --head: #F1E9DC; --muted: #B8A78F;
+  --line: #3A362F; --strong: #F1E9DC; --accent: #C57C57; --logo: #F1E9DC;
+  --btn-bg: #F1E9DC; --btn-bg-hover: #D8C3A7; --btn-fg: #292622;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 16px/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1120px; margin-inline: auto; padding-inline: var(--gutter); }
+a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.25em; transition: text-decoration-thickness var(--quick) ease-out, color var(--quick) ease-out; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--strong); outline-offset: 2px; }
+h1, h2, h3, h4, p, ul, ol, dl, figure, table { margin: 0; }
+h1, h2 { font-family: var(--serif); font-weight: 300; color: var(--head); text-wrap: balance; }
+h1 { font-size: clamp(40px, 6vw, 72px); line-height: 1.05; letter-spacing: -0.01em; }
+h2 { font-size: clamp(30px, 4.4vw, 44px); line-height: 1.1; }
+h3 { font-family: var(--serif); font-weight: 400; font-size: 22px; line-height: 1.25; color: var(--head); text-wrap: balance; }
+p, li { max-width: 64ch; text-wrap: pretty; }
+.label {
+  font-family: var(--sans); font-weight: 500; font-size: 12px; line-height: 1.3;
+  text-transform: uppercase; letter-spacing: var(--track); color: var(--head);
+}
+.muted { color: var(--muted); }
+.small { font-size: 14px; line-height: 1.5; }
+.lede { font-family: var(--serif); font-weight: 300; font-size: 21px; line-height: 1.5; max-width: 58ch; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Header */
+.bar { border-bottom: 1px solid var(--line); }
+.bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 20px; flex-wrap: wrap; }
+.bar svg { display: block; height: 22px; width: auto; color: var(--logo); }
+.bar nav { display: flex; gap: 24px; flex-wrap: wrap; }
+.bar nav a { text-decoration: none; }
+.bar nav a:hover { text-decoration: underline; text-decoration-thickness: 1px; }
+
+/* Opening */
+.opening { padding-block: 96px 64px; display: grid; gap: 32px; }
+.opening h1 { max-width: 14ch; }
+.status-key { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; border-top: 1px solid var(--line); padding-top: 24px; margin-top: 16px; }
+.status-key > div { display: grid; gap: 8px; align-content: start; min-width: 0; }
+
+/* Status marker: the shape carries the meaning as well as the word */
+.st { display: inline-flex; align-items: center; gap: 8px; font: 500 12px/1.3 var(--sans); text-transform: uppercase; letter-spacing: var(--track); color: var(--head); }
+.st::before { content: ""; width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.st.e::before { background: var(--head); }
+.st.r::before { border: 1px solid var(--head); }
+.st.x::before { border: 1px dashed var(--head); }
+
+/* Contents */
+.contents { padding-block: 0 32px; }
+.contents ol { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding-block: 24px; }
+.contents li { display: flex; gap: 12px; }
+.contents li span { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 2ch; }
+.contents a { text-decoration: none; }
+.contents a:hover { text-decoration: underline; }
+
+/* Chapters */
+.chapter { padding-block: var(--section); border-bottom: 1px solid var(--line); scroll-margin-top: 16px; }
+.chapter > .wrap { display: grid; grid-template-columns: 4fr 8fr; gap: 48px; }
+.chapter .side { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.chapter .side .no { font-family: var(--serif); font-weight: 300; font-size: 21px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.chapter .body { display: grid; gap: 48px; min-width: 0; }
+.block { display: grid; gap: 16px; min-width: 0; }
+.block-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+ul.plain { padding-left: 1.1em; display: grid; gap: 8px; }
+ul.plain li { min-width: 0; }
+ul.plain li::marker { color: var(--muted); }
+
+/* Tables */
+.tscroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; line-height: 1.5; }
+th { text-align: left; font: 500 12px/1.3 var(--sans); text-transform: uppercase; letter-spacing: var(--track); color: var(--head); padding: 0 16px 12px 0; border-bottom: 1px solid var(--strong); vertical-align: bottom; }
+td { padding: 12px 16px 12px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+td:last-child, th:last-child { padding-right: 0; }
+code { font-family: var(--sans); font-size: 0.92em; color: var(--head); background: var(--plate); padding: 0 4px; }
+
+/* Principles */
+.principles { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 32px; }
+.principles li { display: grid; gap: 8px; border-top: 1px solid var(--line); padding-top: 16px; }
+.principles .pn { font-family: var(--serif); font-size: 18px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* Balances */
+.pairs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.pairs div { display: grid; gap: 4px; align-content: start; min-width: 0; }
+.pairs b { font-family: var(--serif); font-weight: 400; font-size: 19px; color: var(--head); }
+
+/* Logo */
+.logo-plates { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.logo-plate { background: var(--plate); display: grid; place-items: center; padding: 48px 24px; min-height: 200px; }
+.logo-plate svg { display: block; width: 100%; height: auto; }
+.logo-plate.light { background: var(--c-ivory); color: var(--c-earth); border: 1px solid var(--line); }
+.logo-plate.dark { background: var(--c-earth); color: var(--c-ivory); }
+.logo-plate.wide { grid-column: 1 / -1; }
+.logo-plate .sym { max-width: 120px; }
+.logo-plate .hz { max-width: 420px; }
+figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; }
+
+/* Colour */
+.swatches { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px 16px; }
+.swatch { display: grid; gap: 8px; align-content: start; min-width: 0; }
+.chip { aspect-ratio: 1; max-width: 100%; border: 1px solid var(--line); }
+.swatch .nm { font-family: var(--serif); font-size: 19px; color: var(--head); }
+.swatch .meta { font-size: 13px; line-height: 1.45; color: var(--muted); }
+.balance { display: flex; height: 56px; border: 1px solid var(--line); }
+.balance span { display: block; }
+.balance-key { display: grid; grid-template-columns: 78fr 17fr 5fr; font-size: 13px; color: var(--muted); gap: 0; }
+.balance-key span { padding-top: 8px; padding-right: 8px; min-width: 0; }
+.ratio-ok { color: var(--ink); }
+.ratio-lg { color: var(--ink); }
+.ratio-no { color: var(--muted); }
+.ctable td, .ctable th { text-align: center; padding-right: 8px; }
+.ctable td:first-child, .ctable th:first-child { text-align: left; }
+.ctable .rt { display: block; font-size: 11px; letter-spacing: var(--track); text-transform: uppercase; color: var(--muted); }
+
+/* Typography */
+.specimen { display: grid; gap: 24px; grid-template-columns: 1fr 1fr; }
+.spec { background: var(--plate); padding: 32px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.spec .big { font-size: 64px; line-height: 1; color: var(--head); }
+.spec .big.jost { font-family: var(--sans); font-weight: 400; }
+.spec .big.news { font-family: var(--serif); font-weight: 300; }
+.hier { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding-block: 32px; display: grid; gap: 12px; }
+/* Terracotta never sets small text: the label stays Earth and a short Terracotta rule beside it carries the accent */
+.rule-label { display: flex; align-items: center; gap: 0.9em; }
+.rule-label::before { content: ""; flex: none; width: 2em; height: 2px; background: var(--accent); }
+.hier .t { font-family: var(--serif); font-weight: 300; font-size: clamp(28px, 4vw, 38px); line-height: 1.15; color: var(--head); }
+
+/* Layout */
+.scale { display: grid; gap: 8px; }
+.scale div { display: grid; grid-template-columns: 88px 48px minmax(0, 1fr); gap: 16px; align-items: center; font-size: 14px; }
+.scale i { display: block; height: 8px; background: var(--head); max-width: 100%; }
+.cols { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 8px; height: 88px; }
+.cols span { background: var(--plate); border: 1px solid var(--line); }
+.cols .img { grid-column: span 7; background: var(--c-sand); border-color: var(--c-sand); }
+.cols .txt { grid-column: span 5; display: grid; gap: 6px; align-content: start; padding: 10px; }
+.cols .txt i { display: block; height: 6px; background: var(--muted); opacity: 0.6; }
+.cols .txt i:first-child { height: 10px; width: 70%; background: var(--head); opacity: 1; }
+.steps { padding-left: 1.4em; display: grid; gap: 10px; }
+.steps li::marker { font-family: var(--serif); color: var(--muted); }
+
+/* Shape */
+.shapes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.shape { display: grid; gap: 12px; align-content: start; }
+.shape .s { height: 96px; display: grid; place-items: center; background: var(--plate); }
+.shape .s i { display: block; background: var(--head); }
+.s-none i { width: 72px; height: 56px; border-radius: 0; }
+.s-soft i { width: 96px; height: 40px; border-radius: 2px; }
+.s-round i { width: 48px; height: 48px; border-radius: 50%; }
+
+/* Digital demo */
+.demo { background: var(--plate); padding: 32px; display: grid; gap: 32px; }
+.btns { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+.btn {
+  min-height: 48px; padding: 0 32px; display: inline-flex; align-items: center; justify-content: center;
+  font: 500 13px/1 var(--sans); text-transform: uppercase; letter-spacing: var(--track);
+  border-radius: 2px; border: 1px solid var(--btn-bg); background: var(--btn-bg); color: var(--btn-fg);
+  cursor: pointer; transition: background-color var(--quick) ease-out, border-color var(--quick) ease-out;
+}
+.btn:hover { background: var(--btn-bg-hover); border-color: var(--btn-bg-hover); }
+.btn.sec { background: transparent; color: var(--head); border-color: var(--strong); }
+.btn.sec:hover { background: transparent; border-width: 1px; color: var(--ink); }
+.link-arrow { text-decoration: none; font-weight: 500; }
+.link-arrow:hover { text-decoration: underline; }
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.card { display: grid; gap: 4px; text-decoration: none; min-width: 0; }
+.card .ph { aspect-ratio: 4 / 5; max-width: 100%; background: var(--c-sand); display: grid; place-items: end start; padding: 12px; margin-bottom: 12px; }
+.card .ph span { font: 500 11px/1.3 var(--sans); text-transform: uppercase; letter-spacing: var(--track); color: var(--c-earth); }
+.card .nm { font-family: var(--serif); font-size: 20px; line-height: 1.25; color: var(--head); }
+.card:hover .nm { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+
+/* Packaging and social samples (fixed physical colours in both themes) */
+.pack { display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; }
+.kraft { background: var(--c-kraft); color: var(--c-kraft-ink); padding: 32px; display: grid; gap: 24px; align-content: space-between; min-height: 280px; position: relative; }
+.kraft svg { width: 44%; max-width: 180px; height: auto; color: var(--c-kraft-ink); }
+.kraft .band { position: absolute; left: 0; right: 0; bottom: 56px; height: 20px; background: var(--c-terracotta); }
+.kraft .cap { font: 500 12px/1.3 var(--sans); text-transform: uppercase; letter-spacing: var(--track); }
+.tag { background: var(--c-ivory); color: var(--c-earth); border: 1px solid var(--line); padding: 32px 28px; display: grid; gap: 10px; align-content: start; clip-path: polygon(16px 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%, 0 16px); }
+.tag .hole { width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--c-earth); justify-self: center; margin-bottom: 8px; }
+.tag svg { width: 40px; height: 40px; }
+.tag .pn { font-family: var(--serif); font-weight: 300; font-size: 26px; line-height: 1.15; }
+.tag .meta { font: 500 12px/1.4 var(--sans); text-transform: uppercase; letter-spacing: var(--track); }
+.post { background: var(--c-ivory); color: var(--c-earth); aspect-ratio: 4 / 5; max-width: 360px; width: 100%; padding: 10%; display: grid; grid-template-rows: auto 1fr auto; border: 1px solid var(--line); }
+.post .l { font: 500 11px/1.3 var(--sans); text-transform: uppercase; letter-spacing: var(--track); display: grid; gap: 12px; justify-items: start; }
+.post .l::before { content: ""; width: 32px; height: 2px; background: var(--c-terracotta); }
+.post .q { font-family: var(--serif); font-weight: 300; font-size: clamp(26px, 5vw, 34px); line-height: 1.1; align-self: center; }
+.post svg { width: 28px; height: 28px; justify-self: end; }
+.social { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 32px; align-items: start; }
+
+/* Icons */
+.icons { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 16px 8px; }
+.icons li { display: grid; justify-items: center; gap: 8px; font-size: 12px; color: var(--muted); text-align: center; }
+.icons .ic { width: 24px; height: 24px; color: var(--head); }
+.mini-ic { display: inline-flex; gap: 12px; align-items: center; color: var(--head); vertical-align: middle; }
+.mini-ic svg { width: 16px; height: 16px; --icon-stroke: 2; }
+.mini-ic svg.i20 { width: 20px; height: 20px; --icon-stroke: 1.75; }
+.mini-ic svg.i24 { width: 24px; height: 24px; }
+
+/* Voice */
+.quote { font-family: var(--serif); font-weight: 300; font-size: 24px; line-height: 1.35; color: var(--head); max-width: 34ch; border-left: 1px solid var(--strong); padding-left: 24px; }
+.ba { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.ba > div { display: grid; gap: 12px; align-content: start; padding-top: 16px; border-top: 1px solid var(--line); min-width: 0; }
+.ba .no-line { text-decoration: line-through; text-decoration-thickness: 1px; color: var(--muted); }
+
+/* Do / don't */
+.dd th:first-child, .dd td:first-child { width: 50%; }
+
+/* Footer band with the symbol pattern (Established, guide section 07) */
+.pattern { height: 120px; background-color: var(--c-ivory); }
+.pattern svg { display: block; width: 100%; height: 100%; }
+footer .wrap { padding-block: 48px 64px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; align-items: end; }
+footer svg.sym-f { width: 40px; height: 40px; color: var(--logo); }
+
+@media (max-width: 960px) {
+  .chapter > .wrap { grid-template-columns: 1fr; gap: 32px; }
+  .contents ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .swatches { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  :root { --section: 64px; }
+  .opening { padding-block: 64px 48px; }
+  .status-key, .principles, .pairs, .specimen, .logo-plates, .pack, .ba, .social, .shapes { grid-template-columns: 1fr; }
+  .swatches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .card .nm { font-size: 16px; }
+  .card .ph { padding: 8px; }
+  .card .ph span { font-size: 10px; }
+  .contents ol { grid-template-columns: 1fr; }
+  .spec { padding: 24px; }
+  .spec .big { font-size: 48px; }
+  .demo { padding: 24px; }
+  .bar nav { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; scroll-behavior: auto !important; }
+}
+html { scroll-behavior: smooth; }
+</style>
+
+<!-- Logo masters from brand/identity/logo/svg/, geometry unchanged, fill set to currentColor -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="arant-symbol" viewBox="0 0 256 256"><g fill="currentColor"><path d="M104.21 39.42A8.96 8.96 0 0 1 112.71 33.28L113.92 33.28A7.68 7.68 0 0 1 121.6 40.96L121.6 95.14L81.1 217.45A7.68 7.68 0 0 1 73.81 222.72L54.15 222.72A7.68 7.68 0 0 1 46.86 212.63Z"/><path d="M209.14 212.63A7.68 7.68 0 0 1 201.85 222.72L182.19 222.72A7.68 7.68 0 0 1 174.9 217.45L134.4 95.14L134.4 40.96A7.68 7.68 0 0 1 142.08 33.28L143.29 33.28A8.96 8.96 0 0 1 151.79 39.42Z"/><path d="M112.13 167.03A15.87 15.87 0 1 0 143.87 167.03A15.87 15.87 0 1 0 112.13 167.03Z"/></g></symbol>
+    <symbol id="arant-horizontal" viewBox="0 0 743.45 209"><g fill="currentColor"><path d="M75.58 29.22A7.61 7.61 0 0 1 82.8 24L83.83 24A6.53 6.53 0 0 1 90.36 30.53L90.36 76.57L55.94 180.52A6.53 6.53 0 0 1 49.74 185L33.04 185A6.53 6.53 0 0 1 26.84 176.42Z"/><path d="M164.75 176.42A6.53 6.53 0 0 1 158.56 185L141.85 185A6.53 6.53 0 0 1 135.65 180.52L101.24 76.57L101.24 30.53A6.53 6.53 0 0 1 107.76 24L108.79 24A7.61 7.61 0 0 1 116.02 29.22Z"/><path d="M82.31 137.67A13.49 13.49 0 1 0 109.29 137.67A13.49 13.49 0 1 0 82.31 137.67Z"/><path d="M294.63 27.24A4.73 4.73 0 0 1 299.12 24L299.76 24A4.05 4.05 0 0 1 303.81 28.05L303.81 56.65L282.43 121.22A4.05 4.05 0 0 1 278.59 124L268.21 124A4.05 4.05 0 0 1 264.36 118.67Z"/><path d="M350.02 118.67A4.05 4.05 0 0 1 346.17 124L335.79 124A4.05 4.05 0 0 1 331.94 121.22L310.57 56.65L310.57 28.05A4.05 4.05 0 0 1 314.62 24L315.26 24A4.73 4.73 0 0 1 319.75 27.24Z"/><path d="M298.81 94.6A8.38 8.38 0 1 0 315.57 94.6A8.38 8.38 0 1 0 298.81 94.6Z"/><path d="M363.78 28.05A4.05 4.05 0 0 1 367.84 24L377.69 24A4.05 4.05 0 0 1 381.74 28.05L381.74 119.95A4.05 4.05 0 0 1 377.69 124L367.84 124A4.05 4.05 0 0 1 363.78 119.95Z"/><path d="M372.76 24L403.78 24A29 29 0 0 1 403.78 82L372.76 82L372.76 64.04L403.78 64.04A11.04 11.04 0 0 0 403.78 41.96L372.76 41.96Z"/><path d="M389.44 73.02L412.74 73.02L433.2 118.28A4.05 4.05 0 0 1 429.5 124L415.1 124A4.05 4.05 0 0 1 411.41 121.62Z"/><path d="M478.82 27.24A4.73 4.73 0 0 1 483.31 24L483.95 24A4.05 4.05 0 0 1 488 28.05L488 56.65L466.62 121.22A4.05 4.05 0 0 1 462.77 124L452.4 124A4.05 4.05 0 0 1 448.55 118.67Z"/><path d="M534.21 118.67A4.05 4.05 0 0 1 530.36 124L519.98 124A4.05 4.05 0 0 1 516.13 121.22L494.76 56.65L494.76 28.05A4.05 4.05 0 0 1 498.81 24L499.45 24A4.73 4.73 0 0 1 503.94 27.24Z"/><path d="M483 94.6A8.38 8.38 0 1 0 499.76 94.6A8.38 8.38 0 1 0 483 94.6Z"/><path d="M549.97 28.05A4.05 4.05 0 0 1 554.03 24L563.88 24A4.05 4.05 0 0 1 567.93 28.05L567.93 119.95A4.05 4.05 0 0 1 563.88 124L554.03 124A4.05 4.05 0 0 1 549.97 119.95Z"/><path d="M610.49 28.05A4.05 4.05 0 0 1 614.54 24L624.39 24A4.05 4.05 0 0 1 628.45 28.05L628.45 119.95A4.05 4.05 0 0 1 624.39 124L614.54 124A4.05 4.05 0 0 1 610.49 119.95Z"/><path d="M553.48 30.08A4.05 4.05 0 0 1 556.99 24L568.37 24A4.05 4.05 0 0 1 571.88 26.03L624.94 117.92A4.05 4.05 0 0 1 621.42 124L610.05 124A4.05 4.05 0 0 1 606.54 121.97Z"/><path d="M643.45 28.05A4.05 4.05 0 0 1 647.5 24L715.39 24A4.05 4.05 0 0 1 719.45 28.05L719.45 37.91A4.05 4.05 0 0 1 715.39 41.96L647.5 41.96A4.05 4.05 0 0 1 643.45 37.91Z"/><path d="M672.47 28.05A4.05 4.05 0 0 1 676.52 24L686.37 24A4.05 4.05 0 0 1 690.43 28.05L690.43 119.95A4.05 4.05 0 0 1 686.37 124L676.52 124A4.05 4.05 0 0 1 672.47 119.95Z"/><path d="M262.59 158L266.91 158L266.91 185L262.59 185Z"/><path d="M262.59 158L270.15 158A13.5 13.5 0 0 1 270.15 185L262.59 185L262.59 180.68L270.15 180.68A9.18 9.18 0 0 0 270.15 162.32L262.59 162.32Z"/><path d="M353.64 158L357.96 158L357.96 185L353.64 185Z"/><path d="M353.64 158L369.84 158L369.84 161.97L353.64 161.97Z"/><path d="M353.64 169.51L368.22 169.51L368.22 173.49L353.64 173.49Z"/><path d="M353.64 181.03L369.84 181.03L369.84 185L353.64 185Z"/><path d="M456.29 161.68A8.91 7.83 0 1 0 448.74 173.66L448.74 169.34A4.59 3.51 0 1 1 452.63 163.97Z"/><path d="M448.74 169.34A8.91 7.83 0 1 1 441.18 181.32L444.84 179.03A4.59 3.51 0 1 0 448.74 173.66Z"/><path d="M527.63 158L531.95 158L531.95 185L527.63 185Z"/><path d="M625.47 162.47A13.5 13.5 0 1 0 628.94 171.5L624.62 171.5A9.18 9.18 0 1 1 622.26 165.36Z"/><path d="M616.52 171.41L628.94 171.41L628.94 175.39L616.52 175.39Z"/><path d="M698.93 158L703.25 158L703.25 185L698.93 185Z"/><path d="M715.13 158L719.45 158L719.45 185L715.13 185Z"/><path d="M698.93 158L703.96 158L719.45 185L714.41 185Z"/></g></symbol>
+    <symbol id="arant-one-line" viewBox="0 0 1021.26 168"><g fill="currentColor"><path d="M61 24.15A6.05 6.05 0 0 1 66.75 20L67.57 20A5.19 5.19 0 0 1 72.76 25.19L72.76 61.8L45.39 144.44A5.19 5.19 0 0 1 40.47 148L27.18 148A5.19 5.19 0 0 1 22.26 141.18Z"/><path d="M131.9 141.18A5.19 5.19 0 0 1 126.98 148L113.69 148A5.19 5.19 0 0 1 108.77 144.44L81.41 61.8L81.41 25.19A5.19 5.19 0 0 1 86.59 20L87.41 20A6.05 6.05 0 0 1 93.16 24.15Z"/><path d="M66.36 110.37A10.72 10.72 0 1 0 87.81 110.37A10.72 10.72 0 1 0 66.36 110.37Z"/><path d="M251.2 41.24A4.73 4.73 0 0 1 255.69 38L256.32 38A4.05 4.05 0 0 1 260.38 42.05L260.38 70.65L239 135.22A4.05 4.05 0 0 1 235.15 138L224.77 138A4.05 4.05 0 0 1 220.93 132.67Z"/><path d="M306.59 132.67A4.05 4.05 0 0 1 302.74 138L292.36 138A4.05 4.05 0 0 1 288.51 135.22L267.14 70.65L267.14 42.05A4.05 4.05 0 0 1 271.19 38L271.83 38A4.73 4.73 0 0 1 276.32 41.24Z"/><path d="M255.38 108.6A8.38 8.38 0 1 0 272.14 108.6A8.38 8.38 0 1 0 255.38 108.6Z"/><path d="M320.35 42.05A4.05 4.05 0 0 1 324.41 38L334.26 38A4.05 4.05 0 0 1 338.31 42.05L338.31 133.95A4.05 4.05 0 0 1 334.26 138L324.41 138A4.05 4.05 0 0 1 320.35 133.95Z"/><path d="M329.33 38L360.35 38A29 29 0 0 1 360.35 96L329.33 96L329.33 78.04L360.35 78.04A11.04 11.04 0 0 0 360.35 55.96L329.33 55.96Z"/><path d="M346.01 87.02L369.3 87.02L389.76 132.28A4.05 4.05 0 0 1 386.07 138L371.67 138A4.05 4.05 0 0 1 367.98 135.62Z"/><path d="M435.39 41.24A4.73 4.73 0 0 1 439.88 38L440.51 38A4.05 4.05 0 0 1 444.57 42.05L444.57 70.65L423.19 135.22A4.05 4.05 0 0 1 419.34 138L408.96 138A4.05 4.05 0 0 1 405.12 132.67Z"/><path d="M490.78 132.67A4.05 4.05 0 0 1 486.93 138L476.55 138A4.05 4.05 0 0 1 472.7 135.22L451.32 70.65L451.32 42.05A4.05 4.05 0 0 1 455.38 38L456.02 38A4.73 4.73 0 0 1 460.51 41.24Z"/><path d="M439.57 108.6A8.38 8.38 0 1 0 456.32 108.6A8.38 8.38 0 1 0 439.57 108.6Z"/><path d="M506.54 42.05A4.05 4.05 0 0 1 510.59 38L520.45 38A4.05 4.05 0 0 1 524.5 42.05L524.5 133.95A4.05 4.05 0 0 1 520.45 138L510.59 138A4.05 4.05 0 0 1 506.54 133.95Z"/><path d="M567.05 42.05A4.05 4.05 0 0 1 571.11 38L580.96 38A4.05 4.05 0 0 1 585.01 42.05L585.01 133.95A4.05 4.05 0 0 1 580.96 138L571.11 138A4.05 4.05 0 0 1 567.05 133.95Z"/><path d="M510.05 44.08A4.05 4.05 0 0 1 513.56 38L524.94 38A4.05 4.05 0 0 1 528.45 40.03L581.5 131.92A4.05 4.05 0 0 1 577.99 138L566.62 138A4.05 4.05 0 0 1 563.11 135.97Z"/><path d="M600.01 42.05A4.05 4.05 0 0 1 604.07 38L671.96 38A4.05 4.05 0 0 1 676.01 42.05L676.01 51.91A4.05 4.05 0 0 1 671.96 55.96L604.07 55.96A4.05 4.05 0 0 1 600.01 51.91Z"/><path d="M629.03 42.05A4.05 4.05 0 0 1 633.09 38L642.94 38A4.05 4.05 0 0 1 646.99 42.05L646.99 133.95A4.05 4.05 0 0 1 642.94 138L633.09 138A4.05 4.05 0 0 1 629.03 133.95Z"/><path d="M718.01 70L723.77 70L723.77 106L718.01 106Z"/><path d="M718.01 70L728.09 70A18 18 0 0 1 728.09 106L718.01 106L718.01 100.24L728.09 100.24A12.24 12.24 0 0 0 728.09 75.76L718.01 75.76Z"/><path d="M774.23 70L779.99 70L779.99 106L774.23 106Z"/><path d="M774.23 70L795.83 70L795.83 75.3L774.23 75.3Z"/><path d="M774.23 85.35L793.67 85.35L793.67 90.65L774.23 90.65Z"/><path d="M774.23 100.7L795.83 100.7L795.83 106L774.23 106Z"/><path d="M845.92 74.91A11.88 10.44 0 1 0 835.85 90.88L835.85 85.12A6.12 4.68 0 1 1 841.04 77.96Z"/><path d="M835.85 85.12A11.88 10.44 0 1 1 825.77 101.09L830.66 98.04A6.12 4.68 0 1 0 835.85 90.88Z"/><path d="M875.87 70L881.63 70L881.63 106L875.87 106Z"/><path d="M941.14 75.96A18 18 0 1 0 945.76 88L940 88A12.24 12.24 0 1 1 936.86 79.81Z"/><path d="M929.2 87.88L945.76 87.88L945.76 93.18L929.2 93.18Z"/><path d="M973.9 70L979.66 70L979.66 106L973.9 106Z"/><path d="M995.5 70L1001.26 70L1001.26 106L995.5 106Z"/><path d="M973.9 70L980.62 70L1001.26 106L994.55 106Z"/></g></symbol>
+    <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:var(--icon-stroke, 1.5)" stroke-linecap="round" stroke-linejoin="round"><path d="M4.25 10.5A6.25 6.25 0 1 0 16.75 10.5A6.25 6.25 0 1 0 4.25 10.5ZM14.92 14.92L19.75 19.75"/></symbol><symbol id="icon-bag" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:var(--icon-stroke, 1.5)" stroke-linecap="round" stroke-linejoin="round"><path d="M5.75 8.25H18.25A1 1 0 0 1 19.25 9.25V18.75A1 1 0 0 1 18.25 19.75H5.75A1 1 0 0 1 4.75 18.75V9.25A1 1 0 0 1 5.75 8.25ZM9 8.25V7A3 3 0 0 1 15 7V8.25"/></symbol><symbol id="icon-account" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:var(--icon-stroke, 1.5)" stroke-linecap="round" stroke-linejoin="round"><path d="M8.75 7.25A3.25 3.25 0 1 0 15.25 7.25A3.25 3.25 0 1 0 8.75 7.25ZM5 20A7 7 0 0 1 19 20"/></symbol><symbol id="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:var(--icon-stroke, 1.5)" stroke-linecap="round" stroke-linejoin="round"><path d="M4.25 9L19.75 9M4.25 15L19.75 15"/></symbol><symbol id="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:var(--icon-stroke, 1.5)" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6L18 18M18 6L6 18"/></symbol><symbol id="icon-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:var(--icon-stroke, 1.5)" stroke-linecap="round" stroke-linejoin="round"><path d="M4.25 12L19.75 12M14 6.25L19.75 12L14 17.75"/></symbol><symbol id="icon-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:var(--icon-stroke, 1.5)" stroke-linecap="round" stroke-linejoin="round"><path d="M19.75 12L4.25 12M10 6.25L4.25 12L10 17.75"/></symbol><symbol id="icon-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:var(--icon-stroke, 1.5)" stroke-linecap="round" stroke-linejoin="round"><path d="M9.25 5.75L15.5 12L9.25 18.25"/></symbol><symbol id="icon-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:var(--icon-stroke, 1.5)" stroke-linecap="round" stroke-linejoin="round"><path d="M14.75 5.75L8.5 12L14.75 18.25"/></symbol><symbol id="icon-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:var(--icon-stroke, 1.5)" stroke-linecap="round" stroke-linejoin="round"><path d="M5.75 9.25L12 15.5L18.25 9.25"/></symbol><symbol id="icon-chevron-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:var(--icon-stroke, 1.5)" stroke-linecap="round" stroke-linejoin="round"><path d="M5.75 14.75L12 8.5L18.25 14.75"/></symbol><symbol id="icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:var(--icon-stroke, 1.5)" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5L12 19M5 12L19 12"/></symbol><symbol id="icon-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:var(--icon-stroke, 1.5)" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12L19 12"/></symbol><symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:var(--icon-stroke, 1.5)" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5L9.5 17L19 7.5"/></symbol><symbol id="icon-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:var(--icon-stroke, 1.5)" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 12A8.25 8.25 0 1 0 20.25 12A8.25 8.25 0 1 0 3.75 12ZM12 7.75L12 12.75M12 16.25h0.01"/></symbol><symbol id="icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:var(--icon-stroke, 1.5)" stroke-linecap="round" stroke-linejoin="round"><path d="M4.75 9.25L4.75 4.75L9.25 4.75M14.75 4.75L19.25 4.75L19.25 9.25M19.25 14.75L19.25 19.25L14.75 19.25M9.25 19.25L4.75 19.25L4.75 14.75"/></symbol><symbol id="icon-wishlist" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:var(--icon-stroke, 1.5)" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19.75L5.15 11.8A3.9 3.9 0 1 1 12 9.25A3.9 3.9 0 1 1 18.85 11.8Z"/></symbol>
+  </defs>
+</svg>
+
+<header class="bar">
+  <div class="wrap">
+    <a href="#top" aria-label="ARANT DESIGN" style="text-decoration:none"><svg viewBox="0 0 1021.26 168" role="img" aria-label="ARANT DESIGN"><use href="#arant-one-line"/></svg></a>
+    <nav aria-label="Chapters">
+      <a class="label" href="#colour">Colour</a>
+      <a class="label" href="#typography">Type</a>
+      <a class="label" href="#layout">Layout</a>
+      <a class="label" href="#voice">Voice</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="wrap opening" aria-labelledby="page-title">
+    <p class="label">ARANT DESIGN · Design language · Identity v1.1</p>
+    <h1 id="page-title">How the brand looks, behaves and speaks beyond the logo.</h1>
+    <p class="lede">A reference for anyone designing, writing or building for ARANT DESIGN. It condenses <code>DESIGN.md</code> and the files in <code>brand/design-language/</code>. Values come from <code>packages/tokens/tokens.json</code>; when this page and a canonical source disagree, the source wins.</p>
+    <div class="status-key" role="list" aria-label="Status labels">
+      <div role="listitem"><span class="st e">Established</span><p class="small muted">Backed by a file in the repo: the artwork, the tokens, the identity README or the brand guide. Changing it is a brand decision.</p></div>
+      <div role="listitem"><span class="st r">Recommended</span><p class="small muted">A logical extension that no repo file defines yet. Apply it by default; don't cite it as a brand rule. Proposed values stay here until they are tokens.</p></div>
+      <div role="listitem"><span class="st x">Experimental</span><p class="small muted">An exploratory direction. Explorations only, never production work.</p></div>
+    </div>
+  </section>
+
+  <nav class="wrap contents" aria-label="Contents">
+    <ol>
+      <li><span>01</span><a href="#brand">Brand</a></li>
+      <li><span>02</span><a href="#principles">Principles</a></li>
+      <li><span>03</span><a href="#visual">Visual language</a></li>
+      <li><span>04</span><a href="#logo">Logo</a></li>
+      <li><span>05</span><a href="#colour">Colour</a></li>
+      <li><span>06</span><a href="#typography">Typography</a></li>
+      <li><span>07</span><a href="#layout">Layout</a></li>
+      <li><span>08</span><a href="#shape">Shape language</a></li>
+      <li><span>09</span><a href="#photography">Photography</a></li>
+      <li><span>10</span><a href="#materiality">Materiality</a></li>
+      <li><span>11</span><a href="#packaging">Packaging</a></li>
+      <li><span>12</span><a href="#digital">Digital</a></li>
+      <li><span>13</span><a href="#social">Social</a></li>
+      <li><span>14</span><a href="#voice">Voice and copy</a></li>
+      <li><span>15</span><a href="#accessibility">Accessibility</a></li>
+      <li><span>16</span><a href="#review">Do, don't and open decisions</a></li>
+    </ol>
+  </nav>
+
+  <!-- 01 Brand -->
+  <section class="chapter" id="brand" aria-labelledby="h-brand">
+    <div class="wrap">
+      <div class="side"><span class="no">01</span><h2 id="h-brand">Brand</h2></div>
+      <div class="body">
+        <div class="block">
+          <div class="block-head"><p class="label">The name and the line</p><span class="st e">Established</span></div>
+          <p class="lede" style="color:var(--head)">Objects for Considered Spaces.</p>
+          <p class="small muted">Always in title case with the full stop. Where a design sets it in capitals (an uppercase label, the seal's ring text), the capitals replace the case.</p>
+          <ul class="plain">
+            <li><strong style="font-weight:500">ARANT DESIGN</strong>: primary display name ARANT, descriptor DESIGN. Written in capitals in running text.</li>
+            <li>Web <span class="num">arantdesign.com</span> · Instagram <span class="num">@arantdesign</span>.</li>
+            <li>The mark is <strong style="font-weight:500">Balance</strong>: two equal stone slabs lean together and hold a pebble. Architectural, tactile and quiet.</li>
+            <li>Positioning, for “about” copy and briefings, not a tagline: <em>A contemporary Indian objects and home-design brand creating refined objects for considered spaces.</em></li>
+          </ul>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">Character</p><span class="st r">Recommended</span></div>
+          <ul class="plain">
+            <li><strong style="font-weight:500">Material-neutral.</strong> Current products may use CALSO ONE and other mineral casting materials, but the brand is not a casting brand. Everything must work as well for ceramics, wood, metal, glass, lighting, textiles and furniture.</li>
+            <li><strong style="font-weight:500">Indian in sensibility, contemporary in expression.</strong> Indianness comes from architecture, materials, light and making, never from applied motifs.</li>
+            <li>Considered, warm, tactile, architectural, calm, understated, human. Never flashy, ornate, rustic, cute, sterile, corporate or “craft market”.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 Principles -->
+  <section class="chapter" id="principles" aria-labelledby="h-principles">
+    <div class="wrap">
+      <div class="side"><span class="no">02</span><h2 id="h-principles">Principles</h2><p class="small muted">Six rules that come from the mark itself: few parts, one idea, even openings, weight and support.</p><span class="st r">Recommended wording of Established qualities</span></div>
+      <div class="body">
+        <ol class="principles">
+          <li><span class="pn">1</span><h3>One idea, held in balance</h3><p class="small">One dominant element per composition; the rest supports it. Asymmetry only when the weights still balance, like the two slabs and the pebble.</p></li>
+          <li><span class="pn">2</span><h3>Space is part of the material</h3><p class="small">Whitespace is active, like the split in the mark. Never fill space because it is there.</p></li>
+          <li><span class="pn">3</span><h3>The object leads</h3><p class="small">Products and materials carry the expression; the identity stays small and quiet.</p></li>
+          <li><span class="pn">4</span><h3>Structure before ornament</h3><p class="small">Alignment, planes, proportion and hairlines instead of decoration.</p></li>
+          <li><span class="pn">5</span><h3>Warm through material, not effects</h3><p class="small">Warm grounds, real textures and daylight. No gradients, glows or shadows.</p></li>
+          <li><span class="pn">6</span><h3>Made to last</h3><p class="small">A small, stable vocabulary. Nothing trend-led; nothing tied to one material or category.</p></li>
+        </ol>
+        <p class="small muted">When a request is ambiguous, choose the option that is more consistent, clearer, more timeless, more tactile, less decorated and more scalable to future categories, in that order.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 Visual language -->
+  <section class="chapter" id="visual" aria-labelledby="h-visual">
+    <div class="wrap">
+      <div class="side"><span class="no">03</span><h2 id="h-visual">Visual language</h2></div>
+      <div class="body">
+        <div class="block">
+          <div class="block-head"><p class="label">The signature</p><span class="st e">Established</span></div>
+          <p>Warm grounds, Earth Brown type and logo, one Terracotta accent, a geometric sans with an editorial serif, and objects shown on their own surfaces: stone, terrazzo, kraft, paper.</p>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">The balances it holds</p><span class="st r">Recommended</span></div>
+          <div class="pairs">
+            <div><b>Geometric and organic</b><p class="small muted">Straight grids and square frames around irregular materials and soft light.</p></div>
+            <div><b>Architectural and human</b><p class="small muted">Planes and thresholds, with hands, use and small variations.</p></div>
+            <div><b>Minimal and tactile</b><p class="small muted">Few elements, each with texture: paper, stone, a debossed mark.</p></div>
+            <div><b>Refined and imperfect</b><p class="small muted">Precise type and layout; the objects carry the handmade variation.</p></div>
+            <div><b>Contemporary and timeless</b><p class="small muted">Current in clarity and restraint; no trend effects.</p></div>
+            <div><b>Warm and restrained</b><p class="small muted">Warm neutrals everywhere; accent colour used once.</p></div>
+          </div>
+          <p class="small">A quick test: if a composition still looks right with the photograph removed and only the type left, the structure is sound. If it only works because of an effect, it isn't ARANT.</p>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">Graphic elements, all of them</p><span class="st e">Established</span></div>
+          <div class="tscroll"><table>
+            <thead><tr><th scope="col">Element</th><th scope="col">How it is used</th></tr></thead>
+            <tbody>
+              <tr><td>Symbol as texture</td><td>The symbol on a loose grid, every second one upside down, Sand on Ivory or Ivory on Sand, at least three times smaller than any logo on the same surface. Tissue, box liners, web backgrounds. See the band at the foot of this page.</td></tr>
+              <tr><td>The band</td><td>A single strip of colour, often carrying the one-line lockup.</td></tr>
+              <tr><td>The seal</td><td>A Terracotta circle with the reversed symbol and ring text. The accent on a package.</td></tr>
+              <tr><td>Hairline rules</td><td>1 px dividers in a light Sand tint.</td></tr>
+              <tr><td>Flat tinted plates</td><td>Panels in a lighter tint of Ivory, or Sand, to group content without boxes.</td></tr>
+            </tbody>
+          </table></div>
+          <p class="small muted"><span class="st r">Recommended</span> No other patterns, illustrations, decorative icons or motifs. On the web the pattern stays in small areas (a footer band, an empty state), never behind reading text.</p>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">Icons</p><span class="st e">Established</span></div>
+          <ul class="icons" aria-label="The icon set"><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-search"/></svg><span>search</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-bag"/></svg><span>bag</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-account"/></svg><span>account</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-menu"/></svg><span>menu</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-close"/></svg><span>close</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-arrow-right"/></svg><span>arrow-right</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-arrow-left"/></svg><span>arrow-left</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-chevron-right"/></svg><span>chevron-right</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-chevron-left"/></svg><span>chevron-left</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-chevron-down"/></svg><span>chevron-down</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-chevron-up"/></svg><span>chevron-up</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-plus"/></svg><span>plus</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-minus"/></svg><span>minus</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-check"/></svg><span>check</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-alert"/></svg><span>alert</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-expand"/></svg><span>expand</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-wishlist"/></svg><span>wishlist</span></li></ul>
+          <p>Seventeen line icons in <code>brand/identity/icons/</code>, drawn from the mark: straight strokes for the slabs, the circle for the pebble, the arch, softened rectangles and 45° diagonals. A 24 px grid, one 1.5 stroke, rounded caps and joins, no fills, painted in <code>currentColor</code>. At 16 px set the stroke to 2 and at 20 px to 1.75, so the line stays close to Jost Regular beside it (the sprite reads <code>--icon-stroke</code>).</p>
+          <p class="small muted"><span class="st r">Recommended</span> Use as few as possible; words are often better. Pair each with a label or accessible name. The symbol is not an icon: never a button, bullet, loader or rating star.</p>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">Indian in sensibility</p><span class="st r">Recommended</span></div>
+          <p><strong style="font-weight:500">Draw on</strong> architecture as structure (plinths, thresholds, wall niches, courtyards, stepwell geometry, arches read as openings); the materials of Indian homes (stone floors, lime plaster, terrazzo, brass, clay, cane, handloom); warm daylight with long, soft-edged shadows; making, shown honestly; rupee prices written <span class="num">₹1,800</span>.</p>
+          <p><strong style="font-weight:500">Never use, merely to signal “Indian”:</strong> mandalas, lotus motifs, paisley, temple silhouettes, elephants, rangoli or henna patterns, block-print borders, “exotic” colour clashes, or scripts that imitate Devanagari.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 Logo -->
+  <section class="chapter" id="logo" aria-labelledby="h-logo">
+    <div class="wrap">
+      <div class="side"><span class="no">04</span><h2 id="h-logo">Logo</h2><p class="small muted">Fixed artwork: placed, never rebuilt. Every A in the wordmark is the symbol itself.</p><span class="st e">Established</span></div>
+      <div class="body">
+        <figure>
+          <div class="logo-plates">
+            <div class="logo-plate light wide"><svg class="hz" viewBox="0 0 743.45 209" role="img" aria-label="ARANT DESIGN"><use href="#arant-horizontal"/></svg></div>
+            <div class="logo-plate light"><svg class="sym" viewBox="0 0 256 256" role="img" aria-label="ARANT symbol"><use href="#arant-symbol"/></svg></div>
+            <div class="logo-plate dark"><svg class="sym" viewBox="0 0 256 256" role="img" aria-label="ARANT symbol, reversed"><use href="#arant-symbol"/></svg></div>
+          </div>
+          <figcaption>Horizontal lockup (primary) and the Balance symbol in Earth Brown on Warm Ivory, and reversed in Warm Ivory on Earth Brown. Drawn from the masters in <code>brand/identity/logo/svg/</code>.</figcaption>
+        </figure>
+        <div class="block">
+          <p class="label">Versions</p>
+          <div class="tscroll"><table>
+            <thead><tr><th scope="col">Version</th><th scope="col">Master</th><th scope="col">Use it for</th></tr></thead>
+            <tbody>
+              <tr><td>Horizontal (primary)</td><td><code>arant-horizontal.svg</code></td><td>Website header, packaging, documents</td></tr>
+              <tr><td>Stacked</td><td><code>arant-stacked.svg</code></td><td>Labels, cards, square formats, signage</td></tr>
+              <tr><td>Wordmark</td><td><code>arant-wordmark.svg</code></td><td>Editorial use, and where the symbol already appears</td></tr>
+              <tr><td>One line</td><td><code>arant-one-line.svg</code></td><td>Narrow bands: product wraps, email footers, sticky header</td></tr>
+              <tr><td>ARANT only</td><td><code>arant-wordmark-short.svg</code></td><td>Moulded into products, small tags</td></tr>
+              <tr><td>Symbol</td><td><code>arant-symbol.svg</code></td><td>Stamps, seals, product marks, social avatar, favicon</td></tr>
+              <tr><td>Symbol · reversed</td><td><code>arant-symbol-reversed.svg</code></td><td>The same drawing in Warm Ivory, for dark grounds</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="block">
+          <p class="label">Rules</p>
+          <ul class="plain">
+            <li>Horizontal by default; the others when the space asks for it, never for variety.</li>
+            <li>Works in one colour. Earth Brown or Deep Charcoal on light grounds; the <code>-ivory</code> or <code>-white</code> files on dark. There is no separate small-size or thinned reversed drawing.</li>
+            <li>Clear space: half the ARANT cap height on every side; a quarter of its height for the symbol alone.</li>
+            <li>Minimum size: every opening stays at 0.8 mm or more. In every lockup the narrowest opening is the split in the As of ARANT. Widths are measured on the artwork, not the file's margin (source: <code>brand/identity/README.md</code>):
+              <div class="tscroll" style="margin-top:12px"><table class="num">
+                <thead><tr><th scope="col">Version</th><th scope="col">Screen</th><th scope="col">Print</th><th scope="col">Stamp · deboss · mould</th></tr></thead>
+                <tbody>
+                  <tr><td>Horizontal</td><td>180 px wide</td><td>25 mm wide</td><td>82 mm wide</td></tr>
+                  <tr><td>Stacked</td><td>120 px wide</td><td>18 mm wide</td><td>54 mm wide</td></tr>
+                  <tr><td>One line</td><td>190 px wide</td><td>28 mm wide</td><td>116 mm wide</td></tr>
+                  <tr><td>Wordmark</td><td>120 px wide</td><td>18 mm wide</td><td>54 mm wide</td></tr>
+                  <tr><td>ARANT only</td><td>16 px cap height</td><td>2.5 mm cap height</td><td>12 mm cap height</td></tr>
+                  <tr><td>Symbol</td><td>24 px</td><td>6 mm tall</td><td>12 mm tall</td></tr>
+                </tbody>
+              </table></div>
+              <span class="small muted">Below the stamp size of a lockup, use the symbol or ARANT only.</span></li>
+            <li>Physical marks (stamps, deboss dies, moulds, engraving) use <code>print/pdf/*-black.pdf</code>. Proof one stamp and one test pour at the smallest planned size first.</li>
+            <li><strong style="font-weight:500">Don't</strong> stretch, squash or rotate it; close the split or move the pebble; rearrange a lockup; add shadows, outlines, gradients or effects; recolour outside the palette; retype ARANT in a font; or place it on busy photography without a calm area or solid panel.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 Colour -->
+  <section class="chapter" id="colour" aria-labelledby="h-colour">
+    <div class="wrap">
+      <div class="side"><span class="no">05</span><h2 id="h-colour">Colour</h2><p class="small muted">Earth on ivory, with one warm accent. Values live only in <code>tokens.json</code>; derive shades with <code>tokens.mix(...)</code>.</p></div>
+      <div class="body">
+        <div class="block">
+          <div class="block-head"><p class="label">The palette</p><span class="st e">Established</span></div>
+          <div class="swatches num">
+            <div class="swatch"><div class="chip" style="background:var(--c-ivory)"></div><span class="nm">Warm Ivory</span><span class="meta">color.ivory · #F1E9DC<br>Ground for print and screen</span></div>
+            <div class="swatch"><div class="chip" style="background:var(--c-sand)"></div><span class="nm">Sand</span><span class="meta">color.sand · #D8C3A7<br>Secondary ground, tags, tissue</span></div>
+            <div class="swatch"><div class="chip" style="background:var(--c-earth)"></div><span class="nm">Earth Brown</span><span class="meta">color.earth · #4A3527<br>Primary logo colour</span></div>
+            <div class="swatch"><div class="chip" style="background:var(--c-charcoal)"></div><span class="nm">Deep Charcoal</span><span class="meta">color.charcoal · #292622<br>Text, signage, maximum contrast</span></div>
+            <div class="swatch"><div class="chip" style="background:var(--c-terracotta)"></div><span class="nm">Terracotta</span><span class="meta">color.terracotta · #B85F32<br>Accent: one element per piece; as text, 24 px and larger only</span></div>
+            <div class="swatch"><div class="chip" style="background:var(--c-olive)"></div><span class="nm">Muted Olive</span><span class="meta">color.olive · #64654A<br>Supporting colour, sparingly</span></div>
+            <div class="swatch"><div class="chip" style="background:var(--c-kraft); border-style:dashed; border-color:var(--muted)"></div><span class="nm">Kraft</span><span class="meta">color.kraft · #C4A57F<br>Reference only: the board itself. Never an ink or screen colour</span></div>
+          </div>
+          <p class="small muted">Logo aliases: <code>logo.default</code> → Earth, <code>logo.reversed</code> → Ivory, <code>logo.accent</code> → Terracotta. No gradients.</p>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">The balance</p><span class="st r">Recommended</span></div>
+          <div>
+            <div class="balance" role="img" aria-label="Proportions: about 78 percent Ivory and Sand, 17 percent Earth and Charcoal, 5 percent one accent">
+              <span style="flex:48;background:var(--c-ivory)"></span><span style="flex:30;background:var(--c-sand)"></span><span style="flex:10;background:var(--c-earth)"></span><span style="flex:7;background:var(--c-charcoal)"></span><span style="flex:5;background:var(--c-terracotta)"></span>
+            </div>
+            <div class="balance-key num"><span>Ivory, Sand · 70–85 % · grounds</span><span>Earth, Charcoal · 15–25 %</span><span>≤ 5 %</span></div>
+          </div>
+          <p class="small">One Terracotta <em>or</em> Muted Olive accent element per surface, never both, and never a large screen ground. A seal sticker or a single band is the largest Terracotta area in the system. Photography brings its own colour; the interface around it stays neutral.</p>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">Contrast, text on ground</p><span class="st e">Pairings Established</span></div>
+          <div class="tscroll"><table class="ctable num">
+            <thead><tr><th scope="col">Text ↓ / ground →</th><th scope="col">Ivory</th><th scope="col">Sand</th><th scope="col">Earth</th><th scope="col">Charcoal</th><th scope="col">Terracotta</th><th scope="col">Olive</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Ivory</th><td>—</td><td class="ratio-no">1.4</td><td>9.5<span class="rt">AA</span></td><td>12.5<span class="rt">AA</span></td><td>3.7<span class="rt">Large</span></td><td>5.0<span class="rt">AA</span></td></tr>
+              <tr><th scope="row">Earth</th><td>9.5<span class="rt">AA</span></td><td>6.7<span class="rt">AA</span></td><td>—</td><td class="ratio-no">1.3</td><td class="ratio-no">2.6</td><td class="ratio-no">1.9</td></tr>
+              <tr><th scope="row">Charcoal</th><td>12.5<span class="rt">AA</span></td><td>8.8<span class="rt">AA</span></td><td class="ratio-no">1.3</td><td>—</td><td>3.4<span class="rt">Large</span></td><td class="ratio-no">2.5</td></tr>
+              <tr><th scope="row">Terracotta</th><td>3.7<span class="rt">Large</span></td><td class="ratio-no">2.6</td><td class="ratio-no">2.6</td><td>3.4<span class="rt">Large</span></td><td>—</td><td class="ratio-no">1.4</td></tr>
+              <tr><th scope="row">Olive</th><td>5.0<span class="rt">AA</span></td><td>3.5<span class="rt">Large</span></td><td class="ratio-no">1.9</td><td class="ratio-no">2.5</td><td class="ratio-no">1.4</td><td>—</td></tr>
+            </tbody>
+          </table></div>
+          <p class="small muted">Computed from the tokens with <code>tokens.contrast()</code>. AA: 4.5 : 1 or more, body and UI text. Large: 3 : 1 or more, text 24 px and up only. Unmarked: don't use as text. Earth and Charcoal on kraft reach 4.9 and 6.5 : 1; the guide's kraft ink, <code>mix(earth, #000000, 0.20)</code>, 5.9 : 1.</p>
+          <ul class="plain small">
+            <li>Approved pairings: Earth on Ivory · Ivory on Earth · Earth on Sand · dark brown on kraft · Ivory on Charcoal · Ivory on Terracotta (seals and large sizes only).</li>
+            <li><span class="st e">Established</span> Terracotta is for non-text accents (a rule, a dot, a band, a seal) and for text 24 px and larger only. Below 24 px it fails AA on every brand ground (3.69 : 1 on Ivory, 2.60 on Sand, 4.45 on white), so small labels, prices and links go in Earth or <code>text.muted</code>, with a small Terracotta rule or dot beside them where the accent matters, as in the hierarchy sample below.</li>
+            <li>Sand on Ivory is for grounds and pattern only, never text or meaningful lines. Interactive borders use Earth.</li>
+          </ul>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">Colour roles · color.role.*</p><span class="st e">Established</span></div>
+          <div class="tscroll"><table>
+            <thead><tr><th scope="col">Role</th><th scope="col">Resolves to</th><th scope="col">Notes</th></tr></thead>
+            <tbody>
+              <tr><td><code>surface.ground</code></td><td>color.ivory</td><td>Page background</td></tr>
+              <tr><td><code>surface.alt</code></td><td>color.sand</td><td>Alternating sections, image backdrops, footers</td></tr>
+              <tr><td><code>surface.inverse</code></td><td>color.charcoal</td><td>Dark bands, footers, signage</td></tr>
+              <tr><td><code>text.primary</code></td><td>color.charcoal</td><td>Body and UI text</td></tr>
+              <tr><td><code>text.secondary</code></td><td>color.earth</td><td>Headings, emphasis, links</td></tr>
+              <tr><td><code>text.muted</code></td><td>mix(earth, ivory, 0.22)</td><td>On Ivory only (5.2 : 1), not on Sand</td></tr>
+              <tr><td><code>text.inverse</code></td><td>color.ivory</td><td>Text on Charcoal or Earth</td></tr>
+              <tr><td><code>line.subtle</code></td><td>mix(sand, #FFFFFF, 0.19)</td><td>Decorative dividers only</td></tr>
+              <tr><td><code>line.strong</code></td><td>color.earth</td><td>Inputs, focus rings, anything interactive</td></tr>
+              <tr><td><code>accent</code></td><td>color.terracotta</td><td>One accent element; never text under 24 px</td></tr>
+            </tbody>
+          </table></div>
+          <p class="small muted">Interface code uses the role, not the palette colour. Mixes are recorded in the token and checked by <code>pnpm identity:check</code>.</p>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">Dark theme · color.roleDark.*</p><span class="st e">Established, optional</span></div>
+          <div class="tscroll"><table>
+            <thead><tr><th scope="col">Role</th><th scope="col">Resolves to</th><th scope="col">Notes</th></tr></thead>
+            <tbody>
+              <tr><td><code>surface.ground</code></td><td>mix(charcoal, #000000, 0.25)</td><td>Page</td></tr>
+              <tr><td><code>surface.alt</code></td><td>color.charcoal</td><td>Panels</td></tr>
+              <tr><td><code>text.primary</code></td><td>color.ivory</td><td>Text</td></tr>
+              <tr><td><code>text.muted</code></td><td>mix(sand, charcoal, 0.18)</td><td>Captions</td></tr>
+              <tr><td><code>line.subtle</code></td><td>mix(charcoal, sand, 0.10)</td><td>Hairlines</td></tr>
+              <tr><td><code>line.strong</code></td><td>color.ivory</td><td>Inputs, focus</td></tr>
+              <tr><td><code>accent</code></td><td>mix(terracotta, #FFFFFF, 0.18)</td><td>5.2 : 1 on the dark ground</td></tr>
+            </tbody>
+          </table></div>
+          <p class="small muted">The brand guide's own dark mixes, which this page also uses. Light stays the default; use the reversed logo files on dark. For print, CMYK in the guide is a starting point only: confirm CMYK and Pantone on a printed proof.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 Typography -->
+  <section class="chapter" id="typography" aria-labelledby="h-type">
+    <div class="wrap">
+      <div class="side"><span class="no">06</span><h2 id="h-type">Typography</h2><p class="small muted">Two families, both SIL OFL 1.1 from Google Fonts. The logo is drawn, never typed.</p><span class="st e">Established</span></div>
+      <div class="body">
+        <div class="specimen">
+          <div class="spec"><span class="big jost">Aa</span><p class="label">Jost · font.family.sans</p><p class="small">Primary. The voice of function: navigation, buttons, labels, forms, prices, specifications, packaging copy. Weights 400 and 500.</p></div>
+          <div class="spec"><span class="big news">Aa</span><p class="label">Newsreader · font.family.serif</p><p class="small">Secondary. The voice of the object and the story: headlines, product and collection names, introductions, long reads. Weights 300 display and 400 text, loaded with its <code>opsz</code> axis.</p></div>
+        </div>
+        <div class="block">
+          <p class="label">The hierarchy sample, as in the brand guide</p>
+          <div class="hier">
+            <p class="label rule-label">New · The Plinth collection</p>
+            <p class="t">A tray with the weight of stone</p>
+            <p>Body copy in Jost Regular.</p>
+            <p class="label muted num">Sand · 32 × 18 cm · ₹1,800</p>
+          </div>
+          <p class="small muted">Names and prices are examples.</p>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">Type roles for the web</p><span class="st r">Recommended</span></div>
+          <div class="tscroll"><table class="num">
+            <thead><tr><th scope="col">Role</th><th scope="col">Family · weight</th><th scope="col">Size / line height</th><th scope="col">Casing</th></tr></thead>
+            <tbody>
+              <tr><td>display</td><td>Newsreader 300</td><td>clamp(40px, 6vw, 72px) / 1.05 (proposed)</td><td>Sentence case</td></tr>
+              <tr><td>heading</td><td>Newsreader 300</td><td>clamp(30px, 4.4vw, 44px) / 1.1 (guide)</td><td>Sentence case, balanced</td></tr>
+              <tr><td>title</td><td>Newsreader 300 or 400</td><td>24–38px / 1.15</td><td>Title case for product names</td></tr>
+              <tr><td>lede</td><td>Newsreader 300</td><td>21px / 1.5, 58ch (guide)</td><td>Sentence case</td></tr>
+              <tr><td>body-editorial</td><td>Newsreader 400</td><td>18–19px / 1.6, ≤ 64ch</td><td>Sentence case</td></tr>
+              <tr><td>body</td><td>Jost 400</td><td>16px / 1.6, ≤ 64ch (guide)</td><td>Sentence case</td></tr>
+              <tr><td>small</td><td>Jost 400</td><td>14px / 1.5</td><td>Sentence case</td></tr>
+              <tr><td>label</td><td>Jost 500</td><td>12–13px / 1.3</td><td>UPPERCASE, 0.2em</td></tr>
+              <tr><td>price</td><td>Jost 400 or 500</td><td>As adjacent text</td><td>₹1,800</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="block">
+          <p class="label">Rules</p>
+          <ul class="plain">
+            <li><span class="st e">Established</span> Every uppercase Jost label takes <code>letterSpacing.label</code> (0.2em), read from the token and never typed as a literal. Only ring text fitted to a circle (the seal, the maker's stamp) and lowercase or mono text are exempt.</li>
+            <li><span class="st e">Established</span> Newsreader is never set in all caps. No other typefaces in brand communication.</li>
+            <li>Never Newsreader for buttons, navigation, forms, prices, tables or uppercase labels. Never Jost for long editorial reading or large display lines.</li>
+            <li>Hierarchy from size, weight and space, not colour or boxes. One display headline per view.</li>
+            <li>Body at 16 px or more; nothing below 12 px, and 12–13 px only for uppercase labels. No bold 700.</li>
+            <li>On screen, Newsreader Light from about 21 px up; Regular below that.</li>
+            <li>Sentence case for headlines; title case for product and collection names; uppercase only in short Jost labels.</li>
+            <li>On phones, drop display to the heading range rather than wrap past four lines. Shorten labels rather than shrink them.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 Layout -->
+  <section class="chapter" id="layout" aria-labelledby="h-layout">
+    <div class="wrap">
+      <div class="side"><span class="no">07</span><h2 id="h-layout">Layout</h2><p class="small muted">Containers, gutters, spacing, grid and breakpoints are tokens in <code>tokens.json</code>. How to use them is Recommended.</p><span class="st e">Tokens Established</span></div>
+      <div class="body">
+        <div class="block">
+          <p class="label">Philosophy</p>
+          <p>One dominant hierarchy per section. Space separates things before lines or boxes do. Alternate full-width images with narrower text, and wide sections with calm ones. Asymmetry is deliberate. Content, not containers, defines the page.</p>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">Containers and gutter</p><span class="st e">Established</span></div>
+          <div class="tscroll"><table class="num">
+            <thead><tr><th scope="col">Role</th><th scope="col">Value</th><th scope="col">Use</th></tr></thead>
+            <tbody>
+              <tr><td><code>container.text</code></td><td>64ch</td><td>Reading text, descriptions, forms</td></tr>
+              <tr><td><code>container.content</code></td><td>1120px</td><td>Default page content</td></tr>
+              <tr><td><code>container.wide</code></td><td>1440px</td><td>Wide image grids, editorial spreads</td></tr>
+              <tr><td>Full bleed</td><td>100vw</td><td>Hero photography, material close-ups, dark bands</td></tr>
+              <tr><td><code>gutter.*</code></td><td>clamp(20px, 5vw, 64px)</td><td>Side margin on every screen: min, preferred, max</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">Spacing scale · space.1–10</p><span class="st e">Established</span></div>
+          <div class="scale num">
+            <div><code>space.1</code><span>4</span><i style="width:4px"></i></div>
+            <div><code>space.2</code><span>8</span><i style="width:8px"></i></div>
+            <div><code>space.3</code><span>12</span><i style="width:12px"></i></div>
+            <div><code>space.4</code><span>16</span><i style="width:16px"></i></div>
+            <div><code>space.5</code><span>24</span><i style="width:24px"></i></div>
+            <div><code>space.6</code><span>32</span><i style="width:32px"></i></div>
+            <div><code>space.7</code><span>48</span><i style="width:48px"></i></div>
+            <div><code>space.8</code><span>64</span><i style="width:64px"></i></div>
+            <div><code>space.9</code><span>96</span><i style="width:96px"></i></div>
+            <div><code>space.10</code><span>144</span><i style="width:144px"></i></div>
+          </div>
+          <p class="small">Section spacing <code>space.9</code> on desktop and <code>space.8</code> on phones, always at least one step larger than any spacing inside a section. Related things sit closer than unrelated ones. Never pick a value by eye.</p>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">Grid and breakpoints</p><span class="st e">Established</span></div>
+          <div class="cols" role="img" aria-label="Twelve-column grid with the default editorial split: image across seven columns, text across five"><span class="img"></span><span class="txt"><i></i><i></i><i></i><i style="width:60%"></i></span></div>
+          <p class="small muted">The default editorial split: image 7 · text 5, text aligned to the top of the image.</p>
+          <ul class="plain">
+            <li><code>grid.columns</code> 12 on desktop, 6 on tablet, 4 on phones; <code>grid.gap</code> <code>space.5</code>, 20px and <code>space.4</code>.</li>
+            <li><span class="st r">Recommended</span> Product grids 3 across on desktop, 2 on tablet and phone.</li>
+            <li><code>breakpoint.md</code> 600px, <code>.lg</code> 960px, <code>.xl</code> 1440px, mobile first (the guide keeps 860px and 480px for its own page). Same content and order at every size.</li>
+            <li>One shared left edge for text; centre only short, single-purpose lines. Break the grid on purpose, once per page at most.</li>
+          </ul>
+        </div>
+        <div class="block">
+          <p class="label">Example homepage rhythm</p>
+          <ol class="steps">
+            <li>Header: lockup, three to five Jost links, bag.</li>
+            <li>Opening image: one object in a considered space, one Newsreader line, one text link.</li>
+            <li>Collection introduction: label, Newsreader heading, two-sentence lede.</li>
+            <li>Selected objects: three product cards.</li>
+            <li>Material or process story: image 7 · text 5.</li>
+            <li>Journal or studio: one feature.</li>
+            <li>Footer on Sand or Charcoal.</li>
+          </ol>
+          <p class="small muted">Sections separated by <code>space.9</code>; only one of them uses an accent colour. An illustration of rhythm, not a template.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 Shape -->
+  <section class="chapter" id="shape" aria-labelledby="h-shape">
+    <div class="wrap">
+      <div class="side"><span class="no">08</span><h2 id="h-shape">Shape language</h2><p class="small muted">Shape needs a reason. Round a corner because the thing is touched or physical; otherwise keep it square.</p></div>
+      <div class="body">
+        <div class="block">
+          <div class="block-head"><p class="label">From the mark</p><span class="st e">Established</span></div>
+          <p>Slabs: two equal, leaning planes with weight. One pebble, held rather than placed. One opening, repeated: the split and the pebble gap share one width. Softened, not rounded, caps and feet. Fixed angles: the N's diagonal is exactly 60°. In the guide, panels, swatches and tables are square with 1 px hairlines; roundness appears only in objects: a round coaster, a circular seal, an arched doorway.</p>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">In the interface · radius.*</p><span class="st e">Established</span></div>
+          <div class="shapes">
+            <div class="shape"><div class="s s-none"><i></i></div><p class="label">radius.none · 0</p><p class="small muted">Images, sections, panels, cards, modals, menus. The default.</p></div>
+            <div class="shape"><div class="s s-soft"><i></i></div><p class="label">radius.soft · 2px</p><p class="small muted">Buttons, inputs, selects, small tags. Echoes the logo's caps.</p></div>
+            <div class="shape"><div class="s s-round"><i></i></div><p class="label">radius.round · 50 %</p><p class="small muted">Only truly circular things: avatar, seal, swatch dot, radio.</p></div>
+          </div>
+          <ul class="plain">
+            <li>Cards have no container: an image, then text on the page ground. A needed panel is a flat plate or a hairline box with square corners.</li>
+            <li>Never pill buttons, rounded cards, radii of 8 px and up on large surfaces, blobs or wavy dividers.</li>
+            <li>Packaging: plain rectangular boxes and bands, circular seals, a hang tag with clipped top corners and a round hole. Styling: objects set on planes (a plinth, a stone slab, a shelf, a niche).</li>
+          </ul>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">Under review</p><span class="st x">Experimental</span></div>
+          <p class="small">Arch-topped image crops for a single editorial moment, such as a journal opener. Not for product grids or UI containers, and not in production until reviewed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 Photography -->
+  <section class="chapter" id="photography" aria-labelledby="h-photo">
+    <div class="wrap">
+      <div class="side"><span class="no">09</span><h2 id="h-photo">Photography</h2><p class="small muted">No photography exists in the repo yet.</p><span class="st r">Recommended</span></div>
+      <div class="body">
+        <p class="lede" style="color:var(--head)">The product is the hero. Every choice of light, surface, prop and crop exists to show one object's form, material and scale truthfully.</p>
+        <div class="tscroll"><table>
+          <thead><tr><th scope="col"></th><th scope="col">Prefer</th><th scope="col">Avoid</th></tr></thead>
+          <tbody>
+            <tr><th scope="row" class="label">Light</th><td>Daylight from one side, or one large soft source; soft-edged shadows; warm-neutral white balance</td><td>Flash, ring lights, hard strobes, shadowless white sweeps, heavy HDR, coloured gels</td></tr>
+            <tr><th scope="row" class="label">Surfaces</th><td>Honed stone, lime or clay plaster, terrazzo, warm wood, uncoated paper, kraft, linen, a niche, a step, a ledge</td><td>Glossy laminates, polished marble, busy tiles or textiles, pure white (except marketplaces), fake rustic boards</td></tr>
+            <tr><th scope="row" class="label">Composition</th><td>One subject; a third of the frame calm; eye-level for context, straight-on or top-down for form; architecture in the frame</td><td>Dramatic tilted angles; competing objects</td></tr>
+            <tr><th scope="row" class="label">Styling</th><td>Objects placed as used; one or two quiet, real props; hands doing something real</td><td>Text props, visible brands, plastic, fake plants, seasonal kitsch</td></tr>
+            <tr><th scope="row" class="label">Post</th><td>Correct, don't grade; true material colour; keep genuine variation; sRGB</td><td>Filters, heavy grain, split toning, presets</td></tr>
+          </tbody>
+        </table></div>
+        <div class="block">
+          <p class="label">Shot list per product</p>
+          <div class="tscroll"><table class="num">
+            <thead><tr><th scope="col">Shot</th><th scope="col">Purpose</th><th scope="col">Aspect</th></tr></thead>
+            <tbody>
+              <tr><td>Hero</td><td>Form, on a calm surface, soft shadow</td><td>4:5</td></tr>
+              <tr><td>In context</td><td>Scale and use in a considered interior</td><td>4:5 or 3:2</td></tr>
+              <tr><td>Detail</td><td>Material, edge, finish, the mark</td><td>1:1 or 4:5</td></tr>
+              <tr><td>Set or variant</td><td>Colours or sizes side by side</td><td>3:2</td></tr>
+              <tr><td>Listing</td><td>Clean ground for marketplaces</td><td>1:1</td></tr>
+            </tbody>
+          </table></div>
+          <p class="small muted">Styling doesn't change with the material: a ceramic, a wooden and a mineral-cast object share one world. Masters are kept in Git LFS (Established).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 Materiality -->
+  <section class="chapter" id="materiality" aria-labelledby="h-mat">
+    <div class="wrap">
+      <div class="side"><span class="no">10</span><h2 id="h-mat">Materiality</h2><p class="small muted">Refined craftsmanship, never rustic craft.</p></div>
+      <div class="body">
+        <div class="block">
+          <div class="block-head"><p class="label">The mark on material</p><span class="st e">Established</span></div>
+          <p>The guide shows the mark on terrazzo, stone, kraft and paper, as a blind deboss, an engraving and a moulded maker's stamp. Nothing in it is narrower than the split, so it survives a rubber stamp, a deboss and a silicone mould.</p>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">Refined, not rustic</p><span class="st r">Recommended</span></div>
+          <div class="ba">
+            <div><p class="label">Yes</p><ul class="plain small"><li>Precise forms with a soft, finished edge</li><li>Variation that comes from the process</li><li>Clean type and generous space around texture</li><li>Honed stone, sealed plaster, uncoated paper</li><li>Process shown clearly and calmly</li></ul></div>
+            <div><p class="label">No</p><ul class="plain small"><li>Rough, lumpy or “distressed” forms</li><li>Variation added as decoration</li><li>Hand-lettering, twine and burlap</li><li>Weathered boards, jute, chalkboard, mason jars</li><li>“Artisan” theatre, sepia, heavy grain</li></ul></div>
+          </div>
+        </div>
+        <div class="block">
+          <p class="label">Rules</p>
+          <ul class="plain">
+            <li>Brand-level lines, packaging and the website frame never name a material or process. “Cast”, “poured”, “turned” belong in a product's own description.</li>
+            <li>On objects, prefer the symbol or ARANT only; lockups with DESIGN are for print and packaging. Marks go on the underside or back. Wood, metal and glass are engraved from the same files at the same minimum sizes.</li>
+            <li>Texture on screen comes from photographs of real material: at most one textured area per viewport, never behind reading text. No grain overlays, noise, faux stone or torn-paper edges.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 Packaging -->
+  <section class="chapter" id="packaging" aria-labelledby="h-pack">
+    <div class="wrap">
+      <div class="side"><span class="no">11</span><h2 id="h-pack">Packaging</h2><p class="small muted">Minimal, tactile, warm, practical. One mark, one message, one accent per surface.</p></div>
+      <div class="body">
+        <figure>
+          <div class="pack">
+            <div class="kraft" role="img" aria-label="Kraft box face with the horizontal lockup printed in dark brown and a Terracotta band">
+              <svg viewBox="0 0 743.45 209" aria-hidden="true"><use href="#arant-horizontal"/></svg>
+              <span class="band"></span>
+              <span class="cap">One-colour print on kraft</span>
+            </div>
+            <div class="tag" role="img" aria-label="Hang tag: symbol, product name, colour and price">
+              <span class="hole"></span>
+              <svg viewBox="0 0 256 256" aria-hidden="true"><use href="#arant-symbol"/></svg>
+              <span class="pn">Plinth Tray</span>
+              <span class="meta num">Sand · ₹1,800</span>
+            </div>
+          </div>
+          <figcaption>A kraft face in the guide's kraft ink with a Terracotta band, and a hang tag. Schematic, not production artwork; name and price are examples.</figcaption>
+        </figure>
+        <div class="block">
+          <div class="block-head"><p class="label">The established pieces</p><span class="st e">Established</span></div>
+          <div class="tscroll"><table>
+            <tbody>
+              <tr><td>Product box</td><td>Kraft, one-colour print of the stacked lockup, a Terracotta band</td></tr>
+              <tr><td>Hang tag</td><td>Symbol, product name in Newsreader; colour, finish and price in Jost</td></tr>
+              <tr><td>Seal sticker</td><td>Terracotta circle, reversed symbol, ring text “ARANT DESIGN · OBJECTS FOR CONSIDERED SPACES”</td></tr>
+              <tr><td>Tissue</td><td>The symbol pattern in Sand, with an Earth Brown band carrying the one-line lockup</td></tr>
+              <tr><td>Thank-you card</td><td>Symbol, “Thank you for giving this object a place in your home.”, ARANT DESIGN label</td></tr>
+              <tr><td>Business card</td><td>Reversed symbol on the front; horizontal lockup, name, email and web on the back</td></tr>
+              <tr><td>Stamps, dies, moulds</td><td>The black PDF or SVG, above the stamp minimum sizes</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">Print and placement</p><span class="st r">Recommended</span></div>
+          <ul class="plain">
+            <li>Kraft, uncoated ivory stock and corrugated board. One-colour (Earth, or dark brown on kraft), two-colour (Earth plus Terracotta for one element), rubber stamp or blind deboss. No foil, lamination, spot UV or metallics.</li>
+            <li>The logo small, once per face, with full clear space: a quarter to a third of the face width at most on a box; one small stamp on a shipping carton.</li>
+            <li>Information in Jost; only the product name in Newsreader. Short uppercase headers such as CARE, MATERIAL, SIZE. Proposed minimums: 6 pt legal, 7–8 pt information.</li>
+            <li>Operationally realistic: stock box sizes, short runs, labels and seals applied by hand. No gift range: the standard box with tissue, band and seal, plus a plain card.</li>
+            <li>Retail packs sold in India carry statutory declarations (Legal Metrology rules: packer details, net quantity, MRP, month and year of manufacture, consumer care). Confirm current wording with an advisor; set them legibly in Jost.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 Digital -->
+  <section class="chapter" id="digital" aria-labelledby="h-digital">
+    <div class="wrap">
+      <div class="side"><span class="no">12</span><h2 id="h-digital">Digital</h2><p class="small muted">A design studio's site, not an e-commerce template. Typography, large photography and whitespace do the work.</p></div>
+      <div class="body">
+        <div class="block">
+          <div class="block-head"><p class="label">Foundations</p><span class="st e">Established</span></div>
+          <ul class="plain">
+            <li>Colour and type from <code>@arant/tokens</code>; generate CSS variables from <code>tokens.json</code>. No hard-coded hex values or font names, no parallel token system.</li>
+            <li>Header logo: <code>arant-one-line.svg</code> or <code>arant-horizontal.svg</code>. Icons, manifest and <code>head-snippet.html</code> from <code>brand/identity/export/symbol/</code>.</li>
+            <li>The guide's mockup: one-line lockup left, uppercase Jost navigation right, a hairline below the bar. The header of this page follows it.</li>
+            <li>Tokens for colour roles, spacing, layout, radius, <code>border.subtle</code> and <code>border.strong</code> (1 px hairlines), and <code>motion.quick</code> 150ms ease-out (hover), <code>motion.standard</code> 250ms ease-out (drawers, menus), <code>motion.gentle</code> 400ms ease-in-out (image cross-fades). No shadow token.</li>
+            <li>Icons from <code>brand/identity/icons/</code>: <span class="mini-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-search"/></svg><svg class="i20" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-bag"/></svg><svg class="i24" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-account"/></svg></span> at 16, 20 and 24 px.</li>
+          </ul>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">Components</p><span class="st r">Recommended</span></div>
+          <div class="demo">
+            <div class="btns">
+              <button class="btn" type="button" id="demo-primary">Add to bag</button>
+              <button class="btn sec" type="button" id="demo-secondary">View details</button>
+              <a class="link-arrow" href="#voice">Read the story →</a>
+            </div>
+            <div class="cards">
+              <a class="card" href="#digital"><span class="ph"><span>4:5 image</span></span><span class="nm">Plinth Tray</span><span class="small muted num">Sand · 32 × 18 cm</span><span class="small num">₹1,800</span></a>
+              <a class="card" href="#digital"><span class="ph"><span>4:5 image</span></span><span class="nm">Plinth Coaster</span><span class="small muted">Sand</span><span class="small num">₹650</span></a>
+              <a class="card" href="#digital"><span class="ph"><span>4:5 image</span></span><span class="nm">Threshold Vase</span><span class="small muted">Stoneware</span><span class="small num">₹2,400</span></a>
+            </div>
+            <p class="small muted">Primary, secondary and tertiary actions, and product cards. Names and prices are examples.</p>
+          </div>
+          <div class="tscroll"><table>
+            <tbody>
+              <tr><td>Buttons</td><td>Charcoal or Earth fill, Ivory Jost 500 uppercase label, 2 px radius, 48 px high. One primary per view. Secondary: 1 px Earth border. Tertiary: a text link with an arrow. Terracotta is not a button or link colour.</td></tr>
+              <tr><td>Links</td><td>Text colour with a 1 px underline. Hover thickens the underline or shifts colour one step; never a lift, scale or shadow.</td></tr>
+              <tr><td>Header</td><td>Three to five uppercase Jost links, a single hairline below. It may become sticky and compact on scroll, with no blur and no shadow. Mobile: lockup, bag, “Menu”.</td></tr>
+              <tr><td>Product card</td><td>A 4:5 image, square, no border; then name (Newsreader 400), material and size (Jost, muted), price. No container, badges or overlays.</td></tr>
+              <tr><td>Product page</td><td>Large gallery with no auto-advance; the name as the only display line; one “Add to bag”; details in Jost; a plain note that hand-finished pieces vary; at most three related objects.</td></tr>
+              <tr><td>Forms</td><td>Visible labels above fields; 1 px Earth borders; 48 px high; 16 px text; errors in words below the field, not colour alone.</td></tr>
+              <tr><td>Modals</td><td>Only the bag drawer, mobile menu, image zoom and confirmations. Square Ivory panel, a solid Charcoal scrim, no blur. No arrival pop-ups.</td></tr>
+              <tr><td>Footer</td><td>On Sand, or Charcoal with reversed files. The one place the symbol pattern appears on the web.</td></tr>
+              <tr><td>Elevation</td><td>None. Layers are separated by colour and hairlines (<code>border.*</code>).</td></tr>
+              <tr><td>Motion</td><td class="num">The <code>motion.*</code> tokens; fades and short slides of 16 px at most. Honour reduced motion.</td></tr>
+              <tr><td>Email</td><td>Ivory ground, Jost with the token fallbacks, one image, one button, the one-line lockup in the footer, a plain-text version.</td></tr>
+            </tbody>
+          </table></div>
+          <p class="small"><strong style="font-weight:500">Never:</strong> gradients, glassmorphism or blur, drop shadows, pills, oversized rounded containers, auto-carousels, marquees, countdowns, parallax, fake scarcity.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 Social -->
+  <section class="chapter" id="social" aria-labelledby="h-social">
+    <div class="wrap">
+      <div class="side"><span class="no">13</span><h2 id="h-social">Social</h2><p class="small muted">The feed is the brand world, not a catalogue.</p></div>
+      <div class="body">
+        <div class="block">
+          <div class="block-head"><p class="label">Profile</p><span class="st e">Established</span></div>
+          <p>Profile picture: <code>arant-symbol-app-icon-1024.png</code> (ivory on earth) or <code>arant-symbol-square-1024.png</code>. Bio: “ARANT DESIGN · Objects for Considered Spaces. · Small-batch, hand-finished in India.”</p>
+        </div>
+        <div class="social">
+          <figure>
+            <div class="post" role="img" aria-label="Designed post: label, one Newsreader line, small symbol">
+              <span class="l">New · The Plinth collection</span>
+              <span class="q">A tray with the weight of stone</span>
+              <svg viewBox="0 0 256 256" aria-hidden="true"><use href="#arant-symbol"/></svg>
+            </div>
+            <figcaption>A designed post at 4:5. Example content.</figcaption>
+          </figure>
+          <div class="block">
+            <div class="block-head"><p class="label">Feed</p><span class="st r">Recommended</span></div>
+            <ul class="plain small">
+              <li>About four in five posts are photographs with no type.</li>
+              <li>Designed tiles: Ivory or Sand ground, an uppercase Jost label, one Newsreader Light line, at most one accent, the symbol small and optional, margins at least a tenth of the width.</li>
+              <li>The logo only on launch covers, designed graphics and the carousel close.</li>
+              <li>Formats: feed 1080 × 1350; reels and stories 1080 × 1920, text clear of the top and bottom 250 px.</li>
+              <li>Carousel: cover → context → material → use → making → information → close.</li>
+              <li><span class="st e">Established</span> The close frame: the stacked lockup (140 px of artwork on a phone, with its clear space), then <span class="num">arantdesign.com</span> with <span class="num">@arantdesign</span> below it in Jost. No tagline. All in Earth on Ivory; no accent.</li>
+              <li>Slow, steady camera; text appears with a simple fade; captions on screen. No trending effects or stickers.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 Voice -->
+  <section class="chapter" id="voice" aria-labelledby="h-voice">
+    <div class="wrap">
+      <div class="side"><span class="no">14</span><h2 id="h-voice">Voice and copy</h2><p class="small muted">Thoughtful, clear, concise, confident, warm, contemporary, understated.</p></div>
+      <div class="body">
+        <div class="block">
+          <div class="block-head"><p class="label">Established lines</p><span class="st e">Established</span></div>
+          <p class="quote">Thank you for giving this object a place in your home.</p>
+          <p class="small muted">Also: “Objects for Considered Spaces.” · “Small-batch, hand-finished in India.” · prices written <span class="num">₹1,800</span> · British English.</p>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">How we write</p><span class="st r">Recommended</span></div>
+          <ul class="plain">
+            <li>Write about form, material, object, space, use, process, detail and intention. One precise adjective rather than three.</li>
+            <li>Materials and processes at product level only, never in brand-level lines, packaging frames or navigation.</li>
+            <li>Only say “handmade” or “small-batch” where it is true. State that hand-finished pieces vary, as a fact.</li>
+            <li>Specific over general: <span class="num">32 × 18 cm</span>, <span class="num">1.2 kg</span>. Sentence case. British spelling: colour, centre, grey.</li>
+            <li>Naming: collections take one plain noun from architecture, landscape or form (the Plinth collection); products are collection plus object (Plinth Tray); colour follows as an option. No materials in collection names.</li>
+            <li>No hype, “luxury”, “stunning”, “must-have”, “elevate”, fake scarcity, exclamation marks, emoji or jargon.</li>
+          </ul>
+        </div>
+        <div class="ba">
+          <div><p class="label">Avoid</p><p class="no-line">Elevate your space with our stunning, luxurious handcrafted tray, a true must-have!</p><p class="no-line">Only 3 left! Hurry!</p><p class="no-line">Shop now!</p></div>
+          <div><p class="label">Prefer</p><p>A low tray with the weight of stone, for the things you set down at the door.</p><p>Made in small batches. The next batch ships in March. <span class="muted small">(only if true)</span></p><p>View the collection</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 Accessibility -->
+  <section class="chapter" id="accessibility" aria-labelledby="h-a11y">
+    <div class="wrap">
+      <div class="side"><span class="no">15</span><h2 id="h-a11y">Accessibility</h2><p class="small muted">WCAG 2.2 AA is the floor. Aesthetics never override it.</p><span class="st r">Recommended</span></div>
+      <div class="body">
+        <div class="tscroll"><table>
+          <tbody>
+            <tr><td>Contrast</td><td>4.5 : 1 for body and UI text; 3 : 1 for text 24 px and up and for boundaries and focus. Terracotta text only at 24 px and up (Established). Check new pairs with <code>tokens.contrast()</code>.</td></tr>
+            <tr><td>Readable type</td><td>Body 16 px or more, line height 1.5–1.6, measure about 64ch, nothing below 12 px, resizable to 200 %.</td></tr>
+            <tr><td>Focus</td><td>A visible ring on every control, such as 2 px Earth with a 2 px offset (Ivory on dark grounds).</td></tr>
+            <tr><td>Targets</td><td>At least 24 × 24 px; aim for 44 × 44 px, and 48 px high for buttons and inputs.</td></tr>
+            <tr><td>Alt text</td><td>Object, material, setting: “Sand-coloured tray on a stone console, holding a set of keys”. The pattern gets empty alt; the logo's alt is “ARANT DESIGN”.</td></tr>
+            <tr><td>Not colour alone</td><td>Errors, states, selections and swatches also carry text, an icon or a shape.</td></tr>
+            <tr><td>Motion</td><td>Respect reduced motion; nothing flashes; nothing auto-plays with sound; carousels never auto-advance.</td></tr>
+            <tr><td>Structure</td><td>Semantic HTML, one <code>h1</code>, labelled landmarks and fields, keyboard access, focus managed in dialogs.</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16 Review -->
+  <section class="chapter" id="review" aria-labelledby="h-review">
+    <div class="wrap">
+      <div class="side"><span class="no">16</span><h2 id="h-review">Do, don't and open decisions</h2><p class="small muted">The essentials. The full review table is <code>do-and-dont.md</code>.</p></div>
+      <div class="body">
+        <div class="tscroll"><table class="dd">
+          <thead><tr><th scope="col">Do</th><th scope="col">Don't</th></tr></thead>
+          <tbody>
+            <tr><td>Place generated logo files; horizontal lockup by default</td><td>Retype, redraw, stretch, recolour or add effects to the logo</td></tr>
+            <tr><td>Ivory or Sand grounds; Charcoal or Earth text; one accent</td><td>Terracotta and Olive together; Terracotta text under 24 px; gradients</td></tr>
+            <tr><td>Jost for function, Newsreader for headlines and stories</td><td>Newsreader in capitals; a third typeface; bold 700</td></tr>
+            <tr><td>One dominant element per section; generous, scale-based space</td><td>Dense grids, card walls, filling space for its own sake</td></tr>
+            <tr><td>Square images and panels; 2 px radius on controls</td><td>Pills, rounded cards, shadows, glassmorphism</td></tr>
+            <tr><td>Daylight, real surfaces, one subject, true colour</td><td>Studio strobes, filters, stock images, prop clutter</td></tr>
+            <tr><td>Kraft and ivory stock, one-colour print, a seal or band</td><td>Foil, lamination, full-bleed print, a logo on every face</td></tr>
+            <tr><td>A photography-led social feed</td><td>A logo on every post; “SALE” bursts; trend effects</td></tr>
+            <tr><td>Specific, calm copy about the object</td><td>Hype, “luxury”, fake scarcity, process words in brand lines</td></tr>
+            <tr><td>Indianness through architecture, material, light and making</td><td>Mandalas, lotus, paisley, temple silhouettes as signifiers</td></tr>
+            <tr><td>Test that a layout works for a ceramic, wooden or metal object too</td><td>Anything that ties the brand to one material, process or category</td></tr>
+          </tbody>
+        </table></div>
+        <div class="block">
+          <p class="label">Open decision</p>
+          <p class="small muted">Not settled. Don't resolve it in work; flag it to the studio.</p>
+          <p><strong style="font-weight:500">Casting-specific sample copy</strong> in the brand guide (“Cast by hand, finished slowly.”, “HANDCAST IN INDIA” and others). Samples, not brand lines; don't reuse them at brand level.</p>
+        </div>
+        <div class="block">
+          <div class="block-head"><p class="label">Resolved by the studio</p><span class="st e">Established</span></div>
+          <ul class="plain">
+            <li><strong style="font-weight:500">Tagline.</strong> <strong style="font-weight:500">Objects for Considered Spaces.</strong> It replaces “Objects for considered spaces.” and “Contemporary objects for considered spaces.”</li>
+            <li><strong style="font-weight:500">Label tracking.</strong> Every uppercase Jost label uses <code>letterSpacing.label</code> (0.2em), read from the token. The brand guide and the Instagram templates now do so.</li>
+            <li><strong style="font-weight:500">Small Terracotta text.</strong> Terracotta text only at 24 px and up; smaller text goes in Earth or <code>text.muted</code>, with a small Terracotta rule or dot where the accent matters. The brand guide now follows this.</li>
+          </ul>
+        </div>
+        <div class="block">
+          <p class="label">Canonical sources, highest first</p>
+          <ol class="steps small">
+            <li>Identity artwork and the brand guide, <code>brand/identity/</code> (generated; rebuild, never edit)</li>
+            <li><code>packages/tokens/tokens.json</code></li>
+            <li><code>brand/identity/README.md</code></li>
+            <li><code>DESIGN.md</code></li>
+            <li><code>brand/design-language/</code></li>
+            <li>Mockups and examples</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="pattern" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="balance-pattern" width="64" height="64" patternUnits="userSpaceOnUse">
+          <g style="color:var(--c-sand)">
+            <svg x="4" y="4" width="24" height="24" viewBox="0 0 256 256"><use href="#arant-symbol"/></svg>
+            <g transform="rotate(180 52 52)"><svg x="40" y="40" width="24" height="24" viewBox="0 0 256 256"><use href="#arant-symbol"/></svg></g>
+          </g>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#balance-pattern)"/>
+    </svg>
+  </div>
+  <div class="wrap">
+    <div style="display:grid;gap:8px">
+      <svg class="sym-f" viewBox="0 0 256 256" role="img" aria-label="ARANT symbol"><use href="#arant-symbol"/></svg>
+      <p class="label">ARANT DESIGN · Objects for Considered Spaces.</p>
+    </div>
+    <p class="small muted num">arantdesign.com · @arantdesign · Brand assets all rights reserved</p>
+  </div>
+</footer>

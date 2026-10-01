@@ -6,6 +6,7 @@ brand/identity/guide/
 brand/identity/icons/
 brand/social/templates/
 brand/social/posts/
+site/
 
 # Compiled output
 dist/

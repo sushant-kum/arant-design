@@ -6,6 +6,11 @@ brand/identity/guide/
 brand/identity/icons/
 brand/social/templates/
 brand/social/posts/
+# Built GitHub Pages site (`pnpm site:build`)
+site/
+# Hand-edited, but artifact-shaped like the brand kit, with the logo masters and icons inlined as SVG data:
+# Prettier would reflow it from about 1,000 lines to about 3,900 and make each later artifact republish a large diff
+brand/design-language/arant-design-language.html
 
 # Compiled output
 dist/
