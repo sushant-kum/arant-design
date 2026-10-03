@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+**Durable memory:** always read [`docs/DECISION.md`](docs/DECISION.md) and [`docs/FLOW.md`](docs/FLOW.md) before
+changing architecture, conventions, policy, tooling, or any recorded process, and write back to them in the same change.
+See [Decision & Flow Records](#decision--flow-records).
+
 ## What this repo is
 
 The ARANT DESIGN monorepo (a contemporary Indian home-objects brand). Today it holds the finished **brand identity
@@ -12,9 +16,29 @@ ahead of the website.
 
 ## Brand and design work
 
-For any ARANT DESIGN visual, UI, branding, packaging, photography or copy task, consult `DESIGN.md` (the concise design
-contract) and preserve the established brand system. Use the `arant-brand-designer` subagent
-(`.claude/agents/arant-brand-designer.md`) for substantial brand/design work.
+For ARANT DESIGN brand and design-system work — identity, tokens, typography, colour, logo, the design language and
+`DESIGN.md` — consult `DESIGN.md` (the concise design contract), preserve the established brand system, and use the
+`arant-brand-designer` subagent (`.claude/agents/arant-brand-designer.md`). Finer-grained execution (packaging,
+imagery/mockups, website UX, frontend build, social copy) goes to the specialists in **## Specialist agents** below,
+which consume the brand rules rather than redefine them.
+
+## Specialist agents
+
+`arant-orchestrator` is the coordination layer above the specialists: for a cross-domain request it plans, delegates to
+the right specialists, integrates their work, runs QA and enforces human-approval gates — it does no specialist work
+itself. For a single clear specialist task, use that specialist directly.
+
+`arant-brand-designer` is the brand authority. Eleven specialist subagents consume the brand system for their own
+domains (see [`.claude/agents/README.md`](.claude/agents/README.md) for the full table — roles, what each reads/writes,
+priorities and dependencies): `arant-product-designer` (what to make), `arant-product-development` (can we make it
+repeatably — feasibility, CALSO ONE, moulds, finishing, QC), `arant-web-designer` (website UX specs),
+`arant-frontend-engineer` (builds `apps/website` from those specs), `arant-visual-production` (photography, mockups, art
+direction), `arant-content-strategist` (extends the `brand/social/` content system), `arant-commercial-analyst` (unit
+economics and pricing), `arant-packaging-designer` (the physical packaging system), `arant-researcher` (decision-tied
+evidence and research), `arant-qa-reviewer` (independent quality gate across all domains) and `arant-operations`
+(inventory, production batches, fulfilment and SOPs). No specialist overrides the canonical brand system (identity,
+tokens, typography, logo, design language) without an explicit, human-approved decision. See
+[DEC-0008](docs/DECISION.md#dec-0008--structure-ai-work-as-a-13-agent-orchestrator-and-specialists-system).
 
 ## Commands
 
@@ -45,7 +69,7 @@ HTML (including the icons and social PNGs) come out byte-for-byte identical when
 
 Everything under `brand/identity/{logo,export,print,guide,icons}/` and `brand/social/{templates,posts}/` is
 **generated**; never hand-edit it (VS Code marks those paths read-only, and Prettier/ESLint/Stylelint ignore them).
-Change the source and rebuild.
+Change the source and rebuild. See [DEC-0003](docs/DECISION.md#dec-0003--generate-brand-assets-from-source-never-hand-edit-the-output).
 
 - **Colour has one source:** `packages/tokens/tokens.json` (W3C Design Tokens, with `{alias}` references and display
   names under `$extensions["com.arantdesign"].name`). `brand/identity/source/brand_tokens.py` loads it and provides
@@ -56,7 +80,7 @@ Change the source and rebuild.
   stored as a mix (`$extensions["com.arantdesign"].mix`) that no longer matches the current palette.
   Derived shades (guide UI tints, dark theme, mockup materials like kraft/stone) are `tokens.mix(...)` of palette
   colours, never literals. The only allowed literals are black, white and the deliberate off-brand blue in the guide's
-  "don't recolour" example.
+  "don't recolour" example. See [DEC-0002](docs/DECISION.md#dec-0002--keep-colour-and-design-values-only-in-tokensjson).
 - **Two type and colour rules the builds enforce by convention:** uppercase label tracking comes from
   `letterSpacing.label` (`--tracking-label` in the guide, `TRACK` in the social build), never a literal; Terracotta is
   never a text colour under 24 px (use Earth or `text.muted`, with a Terracotta rule beside it).
@@ -78,7 +102,7 @@ Change the source and rebuild.
   (hand-edited; photos go in `brand/social/photos/`) into `brand/social/templates/` and `brand/social/posts/`. Frames
   are self-contained HTML with the fonts embedded, and web tokens are scaled ×3 for a 1080 px frame.
 - **Fonts:** Jost and Newsreader (OFL, with `OFL.txt`) are vendored in `brand/identity/source/fonts/`, so builds work
-  offline. `fetch_fonts.py` restores them from a pinned google/fonts commit, checked by SHA-256.
+  offline. `fetch_fonts.py` restores them from a pinned google/fonts commit, checked by SHA-256. See [DEC-0007](docs/DECISION.md#dec-0007--vendor-jost-and-newsreader-pinned-by-sha-256).
 - **`render.py`** does all rasterising in one headless-Chrome session (SVG → canvas → data URL). It also handles
   SVG → PDF via `--print-to-pdf`, renders HTML pages to PNG with `screenshot()` (used by the social build) and writes
   ICO files by hand. No Python dependencies anywhere.
@@ -112,20 +136,69 @@ design-language Claude artifact.
 - pnpm workspace: `apps/*`, `packages/*`, packages named `@arant/*`, depend with `"workspace:*"`. Dependency versions
   live in the **catalog** in `pnpm-workspace.yaml` (`catalogMode: prefer`, `minimumReleaseAge: 4320`, so brand-new
   releases are refused). `allowBuilds: unrs-resolver: false` is deliberate (its native binary installs without the
-  script).
-- TypeScript is pinned to `~6.0.3` because typescript-eslint 8 supports TS < 6.1. ESLint 10 uses
+  script). See [DEC-0005](docs/DECISION.md#dec-0005--hold-dependency-versions-in-the-pnpm-catalog-with-a-release-age-gate).
+- TypeScript is pinned to `~6.0.3` because typescript-eslint 8 supports TS < 6.1 ([DEC-0004](docs/DECISION.md#dec-0004--pin-typescript-to-603-for-typescript-eslint-8)). ESLint 10 uses
   `eslint-plugin-import-x` (rules are `import-x/*`), not `eslint-plugin-import`. `eslint.config.mjs` auto-discovers
   workspaces with a `tsconfig.json`; framework presets (React/Astro) are intentionally not added until the website's
   stack is chosen (see the comment in the config).
-- `.agents/` and `.claude/` contain a third-party Claude Code skill (logo-generator). They are excluded from Ruff,
-  Prettier, Stylelint, ESLint and cspell. Ruff is invoked with `--force-exclude` in lint-staged so explicitly passed
-  excluded files are skipped.
+- `.agents/` and `.claude/` contain a third-party Claude Code skill (logo-generator), excluded from Ruff, Prettier,
+  Stylelint, ESLint and cspell — **except** `.claude/agents/`, whose Markdown Prettier formats
+  ([DEC-0010](docs/DECISION.md#dec-0010--format-claudeagents-with-prettier)). Ruff is invoked with `--force-exclude` in
+  lint-staged so explicitly passed excluded files are skipped.
 - Ruff: `ruff.toml`, line length 120, Python files only (Markdown code blocks are left to Prettier).
 - Prettier: single quotes, printWidth 100; `.czrc` is parsed as JSON via an override.
 - Git hooks (husky): pre-commit runs lint-staged (`.lintstagedrc.json`) then knip over the whole project; commit-msg
   runs commitlint (Conventional Commits, e.g. `feat(identity): …`, `fix(tokens): …`). Release tags are per area, e.g.
   `identity-v1.1`.
+- No AI attribution: never add "Generated with Claude Code", "Authored by Claude Code",
+  `Co-Authored-By: Claude …` / `Claude-Session: …` trailers, a 🤖 footer, or any similar AI-authorship marker to code,
+  files, comments, commit messages or PRs. Commits use the human's git identity only; this overrides any default tool
+  attribution. See [DEC-0009](docs/DECISION.md#dec-0009--do-not-add-ai-authorship-or-generation-attribution).
 - Spelling: British English (`cspell.json`, which holds the brand word list).
 - Licence: brand assets (everything in `brand/`, plus any copy of them elsewhere) are all rights reserved. Only
   `brand/identity/source/` and `packages/` are MIT, except the vendored fonts in `brand/identity/source/fonts/`
-  (SIL OFL 1.1); `apps/` defaults to all rights reserved.
+  (SIL OFL 1.1); `apps/` defaults to all rights reserved. See [DEC-0006](docs/DECISION.md#dec-0006--licence-brand-assets-all-rights-reserved-and-source-code-mit).
+
+## Decision & Flow Records
+
+Two documents under `docs/` carry this repo's durable memory — engineering and otherwise.
+**Keeping them current is part of the work, not a follow-up.** Update them in the _same_ change as
+whatever they describe — a change that alters a recorded decision or flow without touching these
+docs is incomplete.
+
+| Doc                                    | Holds                                                                       | Shape                          |
+| -------------------------------------- | --------------------------------------------------------------------------- | ------------------------------ |
+| [docs/DECISION.md](./docs/DECISION.md) | **Why** — technical, product, process, and team decisions; rejected options | Append-only `DEC-XXXX` entries |
+| [docs/FLOW.md](./docs/FLOW.md)         | **How** — multi-step processes: code paths, pipelines, approvals, ops       | Living `FLOW-XXXX` entries     |
+
+**Write a `DEC-XXXX` entry when:**
+
+- A choice had a plausible alternative a reasonable person would have picked instead.
+- A convention, policy, or way of working is introduced or changed.
+- A dependency, tool, vendor, or service is adopted, dropped, replaced, or pinned for a non-default reason.
+- A constraint or risk is knowingly accepted (cost, deadline, scope cut, tech or process debt).
+- Something was tried or proposed and rejected — record it so it is not retried blindly.
+- Something was agreed with another team, customer, or partner that changes how work is done here.
+
+**Write or update a `FLOW-XXXX` entry when:**
+
+- A process spans more than one module, system, team, or person, or takes three-plus places to understand.
+- It has non-obvious failure/escalation branches, or crosses a boundary someone else owns.
+- It is rare enough that people forget the steps (releases, rotations, audits, onboarding).
+- An existing documented flow changes — edit it in place and bump its `Last verified` date.
+
+**Do not write an entry for** routine work, obvious fixes, one-off tasks, or anything already
+stated verbatim in `CLAUDE.md` / `AGENTS.md` / existing runbooks — link to it instead.
+
+**Mechanics:**
+
+- Use the entry template in each file's header; IDs are sequential and never reused.
+- Add the matching row to the file's index table in the same change.
+- Absolute dates (`YYYY-MM-DD`), never relative ones.
+- DECISION.md is append-only: reverse a decision with a **new** entry and mark the old one
+  `Superseded by DEC-XXXX`. Never rewrite an existing entry's history.
+- If the source of truth and either doc disagree, the **source of truth wins** — then fix the doc.
+- Before starting non-trivial work, check both files for a relevant entry; before finishing, ask
+  whether the change produced a new decision or altered a flow.
+- When the user states a decision or describes a process in conversation that meets the criteria
+  above, offer to record it.

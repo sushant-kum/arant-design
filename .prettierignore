@@ -48,9 +48,11 @@ yarn-error.log
 .DS_Store
 Thumbs.db
 
-# Coding assistants: third-party Claude Code skills
+# Coding assistants: third-party Claude Code skills stay ignored, but the ARANT agent
+# definitions in .claude/agents/ are maintained Markdown and are formatted (see DEC-0010)
 .agents/
-.claude/
+.claude/*
+!.claude/agents/
 skills-lock.json
 
 # Python caches (Python itself is formatted by Ruff)
